@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d//**)",
+      "Bash(npx create-next-app@latest yuinseo-portfolio --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack --no-react-compiler)",
+      "Bash(npx --yes create-next-app@latest yuinseo-portfolio --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack)",
+      "Bash(printf \"No\\\\nNo\\\\n\")",
+      "Bash(npx create-next-app@latest yuinseo-portfolio --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack)",
+      "Bash(npx create-next-app@latest yuinseo-portfolio --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack --no-agents-file)",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(npx create-next-app@latest yuinseo-portfolio --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack --no-agents-file --no-react-compiler)",
+      "Bash(echo \"Done: $?\")",
+      "Bash(taskkill /F /IM node.exe 2>/dev/null; echo \"killed\")",
+      "Bash(npx create-next-app@latest yuinseo-portfolio --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack --no-react-compiler --agents-file)",
+      "Bash(echo \"DONE:$?\")",
+      "Bash(cd \"D:/Portfolio\" && npm install 2>&1)",
+      "Bash(cd \"D:/Portfolio\" && npm install next@latest 2>&1 | tail -5)",
+      "Bash(cd \"D:/Portfolio\" && npm install eslint-config-next@latest 2>&1 | tail -3 && npm audit 2>&1 | head -10)",
+      "Bash(cd \"D:/Portfolio\" && npm install next-mdx-remote@latest 2>&1 | tail -3)",
+      "Bash(cd \"D:/Portfolio\" && npm run build 2>&1)"
+    ]
+  }
+}

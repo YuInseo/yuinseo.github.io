@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 255 255 255;
+    --foreground: 15 23 42;
+    --muted: 241 245 249;
+    --muted-foreground: 100 116 139;
+    --border: 226 232 240;
+    --accent: 99 102 241;
+  }
+
+  .dark {
+    --background: 10 10 10;
+    --foreground: 226 232 240;
+    --muted: 30 30 30;
+    --muted-foreground: 148 163 184;
+    --border: 51 51 51;
+    --accent: 129 140 248;
+  }
+
+  body {
+    @apply bg-[rgb(var(--background))] text-[rgb(var(--foreground))] transition-colors duration-300;
+  }
+
+  * {
+    @apply border-[rgb(var(--border))];
+  }
+}
+
+/* Prose styles for blog posts */
+.prose {
+  @apply text-[rgb(var(--foreground))];
+}
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  @apply text-[rgb(var(--foreground))] font-bold;
+}
+.prose a {
+  @apply text-[rgb(var(--accent))] hover:underline;
+}
+.prose code {
+  @apply bg-[rgb(var(--muted))] text-[rgb(var(--foreground))] rounded px-1 py-0.5 text-sm font-mono;
+}
+.prose pre {
+  @apply bg-[rgb(var(--muted))] rounded-lg p-4 overflow-x-auto;
+}
+.prose pre code {
+  @apply bg-transparent p-0;
+}
+.prose blockquote {
+  @apply border-l-4 border-[rgb(var(--accent))] pl-4 italic text-[rgb(var(--muted-foreground))];
+}
+.prose hr {
+  @apply border-[rgb(var(--border))];
+}
