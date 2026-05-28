@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import DownloadButton from "./DownloadButton";
 
 export const metadata: Metadata = {
   title: "Artisan's Compass — 정리 프로그램",
@@ -154,6 +155,14 @@ export default function ArtisansCompassPage() {
             )
           )}
         </div>
+
+        <div className="mt-12">
+          <DownloadButton />
+        </div>
+
+        <p className="mt-4 text-xs text-zinc-600">
+          Windows 10 / 11 · 64-bit
+        </p>
       </section>
 
       {/* Feature grid */}
