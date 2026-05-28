@@ -28,9 +28,12 @@ export default function ArtisansCompassPage() {
 
       {/* Intro */}
       <section className="mx-auto max-w-2xl px-5 pb-14 pt-20">
-        <h1 className="mb-10 text-3xl font-bold tracking-tight sm:text-4xl">
+        <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
           Artisan&apos;s Compass
         </h1>
+        <p className="mb-10 text-[15px] leading-relaxed text-[var(--t3)]">
+          하루를 기록하는 Windows 앱이에요.
+        </p>
         <DownloadButton />
       </section>
 
