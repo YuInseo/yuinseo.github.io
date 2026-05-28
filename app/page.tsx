@@ -1,112 +1,78 @@
-import Image from "next/image";
 import Link from "next/link";
+import Nav from "./components/Nav";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen bg-[#0f0f14] text-[#e2e2ec]">
+      <Nav />
+
+      <main className="mx-auto max-w-3xl px-5">
+        {/* Hero */}
+        <section className="pb-20 pt-24">
+          <p className="mb-3 text-sm text-[#6a6a98]">안녕하세요</p>
+          <h1 className="mb-5 text-4xl font-bold tracking-tight sm:text-5xl">
+            유인서입니다.
+          </h1>
+          <p className="max-w-md text-base leading-relaxed text-[#8888b8]">
+            개발자이자 메이커 — 쓸 만한 도구를 직접 만들고 기록합니다.
+          </p>
+        </section>
+
+        <hr className="border-[#252530]" />
+
+        {/* Projects */}
+        <section className="py-16">
+          <div className="mb-8 flex items-center justify-between">
+            <h2 className="text-lg font-semibold">프로젝트</h2>
+          </div>
+          <Link
+            href="/projects/artisans-compass"
+            className="group flex flex-col gap-3 rounded-2xl border border-[#252530] bg-[#17171e] p-6 transition-all hover:border-[#353548] hover:bg-[#1e1e28]"
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+            <div className="flex items-center justify-between">
+              <span className="rounded-full bg-[#7c6cf4]/15 px-3 py-1 text-xs font-medium text-[#9b8dff]">
+                Windows App
+              </span>
+              <span className="text-[#2e2e48] transition-colors group-hover:text-[#6a6a98]">
+                →
+              </span>
+            </div>
+            <div>
+              <h3 className="mb-1 font-semibold text-[#e2e2ec]">Artisan&apos;s Compass</h3>
+              <p className="text-sm text-[#6a6a98]">
+                타임테이블 · 앱 사용량 · 데일리 아카이브 · 루틴 캘린더
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {["Electron", "React", "TypeScript"].map((t) => (
+                <span
+                  key={t}
+                  className="rounded-md bg-[#1e1e2a] px-2.5 py-1 text-xs text-[#4a4a78]"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          </Link>
+        </section>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+        <hr className="border-[#252530]" />
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+        {/* Blog */}
+        <section className="py-16">
+          <div className="mb-8 flex items-center justify-between">
+            <h2 className="text-lg font-semibold">블로그</h2>
+          </div>
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-[#252530] py-16 text-center">
+            <p className="text-[#6a6a98]">아직 작성된 글이 없어요.</p>
+            <p className="text-sm text-[#3a3a58]">곧 업데이트할게요.</p>
+          </div>
+        </section>
+      </main>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <Link
-          href="/projects/artisans-compass"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Projects{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Artisan&apos;s Compass — 하루를 다듬는 데스크탑 생산성 앱.
-          </p>
-        </Link>
-      </div>
-    </main>
+      <footer className="border-t border-[#252530] px-5 py-8 text-center text-xs text-[#3a3a58]">
+        © 2025 yuinseo
+      </footer>
+    </div>
   );
 }

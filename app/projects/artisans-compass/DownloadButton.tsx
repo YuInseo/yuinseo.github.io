@@ -21,11 +21,13 @@ export default function DownloadButton() {
       .catch(() => setLoading(false));
   }, []);
 
-  const exe = release?.assets.find((a) => a.name.endsWith(".exe") && !a.name.endsWith(".blockmap"));
+  const exe = release?.assets.find(
+    (a) => a.name.endsWith(".exe") && !a.name.endsWith(".blockmap")
+  );
 
   if (loading) {
     return (
-      <div className="inline-flex h-14 w-64 animate-pulse items-center justify-center rounded-2xl bg-white/10" />
+      <div className="inline-flex h-14 w-64 animate-pulse items-center justify-center rounded-xl bg-[#252530]" />
     );
   }
 
@@ -35,7 +37,7 @@ export default function DownloadButton() {
         href="https://github.com/YuInseo/artisans-compass/releases/latest"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-3 rounded-2xl bg-blue-500 px-8 py-4 font-semibold text-white transition-colors hover:bg-blue-400"
+        className="inline-flex items-center gap-3 rounded-xl bg-[#7c6cf4] px-7 py-3.5 font-semibold text-white transition-colors hover:bg-[#9b8dff]"
       >
         <DownloadIcon />
         Releases 페이지로 이동
@@ -47,12 +49,12 @@ export default function DownloadButton() {
     <div className="flex flex-col items-center gap-3">
       <a
         href={exe.browser_download_url}
-        className="inline-flex items-center gap-3 rounded-2xl bg-blue-500 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-400 hover:shadow-blue-400/30 active:scale-[0.98]"
+        className="inline-flex items-center gap-3 rounded-xl bg-[#7c6cf4] px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-[#7c6cf4]/20 transition-all hover:bg-[#9b8dff] hover:shadow-[#9b8dff]/30 active:scale-[0.98]"
       >
         <DownloadIcon />
         Windows 설치 파일 다운로드
       </a>
-      <span className="text-sm text-zinc-500">
+      <span className="text-sm text-[#3e3e68]">
         {release?.tag_name} · {exe.name}
       </span>
     </div>
@@ -63,8 +65,8 @@ function DownloadIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
