@@ -27,8 +27,8 @@ export default function ArtisansCompassPage() {
 
       <hr className="border-[var(--border)]" />
 
-      {/* Main screen mock */}
-      <section className="mx-auto max-w-5xl px-5 py-14">
+      {/* Main screen mock — PC only */}
+      <section className="mx-auto hidden max-w-5xl px-5 py-14 lg:block">
         <p className="mb-5 text-sm font-medium text-[var(--t2)]">메인 화면</p>
         <MainScreenMock />
       </section>
