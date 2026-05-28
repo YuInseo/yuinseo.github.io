@@ -110,15 +110,15 @@ export default function ArtisansCompassPage() {
               <span>&gt;</span>
             </div>
           </div>
-          <div className="grid grid-cols-7 gap-0.5 text-center text-[10px]">
+          <div className="grid grid-cols-7 gap-1 text-center text-xs">
             {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-              <div key={i} className="py-1 font-semibold text-[var(--t5)]">{d}</div>
+              <div key={i} className="py-1.5 font-semibold text-[var(--t5)]">{d}</div>
             ))}
             {[...Array(5)].map((_, i) => <div key={i} />)}
             {Array.from({ length: 28 }, (_, i) => i + 1).map((day) => (
               <div
                 key={day}
-                className={`rounded py-1 ${day === 6 ? "font-bold" : "text-[var(--t4)]"}`}
+                className={`rounded py-1.5 ${day === 6 ? "font-bold" : "text-[var(--t4)]"}`}
                 style={
                   day === 6
                     ? { backgroundColor: "var(--t1)", color: "var(--bg)" }
