@@ -21,7 +21,13 @@ const timelineRows = [
   { time: "22:00", bars: [] },
 ];
 
-export default function ArtisansCompassPage() {
+const appUsageRows = [
+  { name: "Code.exe",    time: "4h 23m" },
+  { name: "chrome.exe",  time: "2h 15m" },
+  { name: "Figma.exe",   time: "1h 08m" },
+  { name: "Notion.exe",  time: "45m" },
+  { name: "Slack.exe",   time: "32m" },
+];
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--t1)]">
       <Nav />
@@ -65,6 +71,26 @@ export default function ArtisansCompassPage() {
                     <div className="h-px w-full bg-[var(--border)]" />
                   )}
                 </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="my-4 border-t border-[var(--border)]" />
+
+          <div className="mb-2 flex gap-2">
+            <div className="px-2.5 py-1 text-[11px] text-[var(--t5)]">타임라인</div>
+            <div className="rounded bg-[var(--surface-up)] px-2.5 py-1 text-[11px] font-semibold text-[var(--t2)]">
+              앱 사용량
+            </div>
+          </div>
+          <div className="space-y-2">
+            {appUsageRows.map((app) => (
+              <div key={app.name} className="flex items-center justify-between text-[11px]">
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: "var(--tl-a)" }} />
+                  <span className="text-[var(--t2)]">{app.name}</span>
+                </div>
+                <span className="tabular-nums text-[var(--t4)]">{app.time}</span>
               </div>
             ))}
           </div>
