@@ -112,13 +112,13 @@ export default function ArtisansCompassPage() {
           </div>
           <div className="grid grid-cols-7 text-center text-xs">
             {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-              <div key={i} className="py-2 font-semibold text-[var(--t5)]">{d}</div>
+              <div key={i} className="py-3 font-semibold text-[var(--t5)]">{d}</div>
             ))}
-            {[...Array(5)].map((_, i) => <div key={i} className="py-2" />)}
+            {[...Array(5)].map((_, i) => <div key={i} className="py-3" />)}
             {Array.from({ length: 28 }, (_, i) => i + 1).map((day) => (
               <div
                 key={day}
-                className={`py-2 ${day === 6 ? "rounded font-bold" : "text-[var(--t4)]"}`}
+                className={`py-3 ${day === 6 ? "rounded font-bold" : "text-[var(--t4)]"}`}
                 style={
                   day === 6
                     ? { backgroundColor: "var(--t1)", color: "var(--bg)", borderRadius: "4px" }
