@@ -28,6 +28,8 @@ const appUsageRows = [
   { name: "Notion.exe",  time: "45m" },
   { name: "Slack.exe",   time: "32m" },
 ];
+
+export default function ArtisansCompassPage() {
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--t1)]">
       <Nav />
