@@ -40,25 +40,25 @@ const timelineBars = [
 export default function MainScreenMock() {
   return (
     <div className="overflow-hidden rounded-lg border border-[var(--border-hi)] bg-[var(--surface)]">
-      {/* top bar */}
-      <div className="flex items-center gap-2 border-b border-[var(--border)] px-3 py-2">
-        <span className="text-[10px] text-[var(--t5)]">일반 작업</span>
-        <span className="rounded bg-[var(--surface-up)] px-1.5 py-0.5 text-[10px] text-[var(--t3)]">
+      {/* top bar — horizontal scroll on mobile */}
+      <div className="flex items-center gap-2 overflow-x-auto border-b border-[var(--border)] px-3 py-2 [scrollbar-width:none]">
+        <span className="shrink-0 text-[10px] text-[var(--t5)]">일반 작업</span>
+        <span className="shrink-0 rounded bg-[var(--surface-up)] px-1.5 py-0.5 text-[10px] text-[var(--t3)]">
           Artisan&apos;s compass
         </span>
-        <span className="text-[10px] text-[var(--t5)]">Project 2</span>
-        <span className="text-[10px] text-[var(--t5)]">Project 4</span>
-        <span className="rounded bg-[var(--accent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--btn-text)]">
+        <span className="shrink-0 text-[10px] text-[var(--t5)]">Project 2</span>
+        <span className="shrink-0 text-[10px] text-[var(--t5)]">Project 4</span>
+        <span className="shrink-0 rounded bg-[var(--accent)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--btn-text)]">
           Project 9
         </span>
-        <span className="ml-auto text-[10px] text-[var(--t5)]">Project 6</span>
+        <span className="shrink-0 text-[10px] text-[var(--t5)]">Project 6</span>
       </div>
 
-      {/* 3-panel body */}
-      <div className="grid grid-cols-1 divide-y divide-[var(--border)] lg:grid-cols-[1fr_1.4fr_0.9fr] lg:divide-x lg:divide-y-0">
+      {/* panels */}
+      <div className="grid grid-cols-2 lg:grid-cols-[1fr_1.4fr_0.9fr]">
 
-        {/* Left — timelapse */}
-        <div className="p-3">
+        {/* Left — timelapse (PC only) */}
+        <div className="hidden border-r border-[var(--border)] p-3 lg:block">
           <p className="mb-2 text-[10px] font-semibold text-[var(--t4)]">타임랩스 플레이어</p>
           <div className="mb-2 grid grid-cols-3 gap-1">
             {[55, 42, 68, 35, 78, 48, 62, 30, 72].map((opacity, i) => (
@@ -109,7 +109,7 @@ export default function MainScreenMock() {
         </div>
 
         {/* Right — stats */}
-        <div className="p-3">
+        <div className="border-l border-[var(--border)] p-3">
           <p className="mb-2 text-[10px] font-semibold text-[var(--t4)]">타임라인</p>
           <div className="mb-3 space-y-[3px]">
             {timelineBars.map((row) => (
