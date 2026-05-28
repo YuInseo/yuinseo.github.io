@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Nav from "../../components/Nav";
 import DownloadButton from "./DownloadButton";
 import TimelineCard from "./TimelineCard";
+import MainScreenMock from "./MainScreenMock";
 
 export const metadata: Metadata = {
   title: "Artisan's Compass",
@@ -22,6 +23,14 @@ export default function ArtisansCompassPage() {
           하루를 기록하는 Windows 앱이에요.
         </p>
         <DownloadButton />
+      </section>
+
+      <hr className="border-[var(--border)]" />
+
+      {/* Main screen mock */}
+      <section className="mx-auto max-w-5xl px-5 py-14">
+        <p className="mb-5 text-sm font-medium text-[var(--t2)]">메인 화면</p>
+        <MainScreenMock />
       </section>
 
       <hr className="border-[var(--border)]" />
