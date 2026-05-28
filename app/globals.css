@@ -36,20 +36,20 @@ html { scroll-behavior: smooth; }
   --surface-up: #222222;
   --border:     #2a2a2a;
   --border-hi:  #363636;
-  --t1: #f0f0f0;
-  --t2: #b8b8b8;
-  --t3: #707070;
-  --t4: #484848;
-  --t5: #303030;
-  --accent:    #f0f0f0;
+  --t1: #ffffff;
+  --t2: #d4d4d4;
+  --t3: #9a9a9a;
+  --t4: #666666;
+  --t5: #444444;
+  --accent:    #ffffff;
   --accent-hi: #ffffff;
-  --tl-a:  #686868;
-  --tl-b:  #383838;
-  --archive-1: #f0f0f0;
-  --archive-2: #484848;
-  --btn-bg:       #f0f0f0;
+  --tl-a:  #888888;
+  --tl-b:  #444444;
+  --archive-1: #ffffff;
+  --archive-2: #666666;
+  --btn-bg:       #ffffff;
   --btn-text:     #111111;
-  --btn-hover-bg: #ffffff;
+  --btn-hover-bg: #e8e8e8;
   --nav-bg: rgba(17, 17, 17, 0.88);
 }
 
