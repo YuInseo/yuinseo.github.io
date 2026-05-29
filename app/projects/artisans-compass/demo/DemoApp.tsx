@@ -179,36 +179,66 @@ function Sidebar({ active, onSet }: { active: string; onSet: (v: string) => void
 }
 
 // ─── Gantt ────────────────────────────────────────────────────────────────────
+const GANTT_DAY_W = 26; // px per day
+const GANTT_NAME_W = 80;
+
 function GanttView({ activeId, onSelect }: { activeId: string; onSelect: (id: string) => void }) {
-  const pct = (n: number) => `${(n / GANTT_DAYS) * 100}%`;
-  const dayLabels: { day: number; offset: number; isToday: boolean }[] = [];
-  const monthMarkers: { label: string; offset: number }[] = [];
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const CONTENT_W = GANTT_DAYS * GANTT_DAY_W;
+  const BAR_H = 22;
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      const target = GANTT_TODAY_IDX * GANTT_DAY_W - scrollRef.current.clientWidth / 2 + 80;
+      scrollRef.current.scrollLeft = Math.max(0, target);
+    }
+  }, []);
+
+  const labels: { i: number; day: number; isToday: boolean }[] = [];
+  const months: { i: number; label: string }[] = [];
   for (let i = 0; i < GANTT_DAYS; i++) {
     const d = new Date(GANTT_START); d.setDate(GANTT_START.getDate() + i);
-    if (d.getDate() === 1) monthMarkers.push({ label: `${d.getFullYear()}.${d.getMonth() + 1}`, offset: i });
-    if (i % 3 === 0) dayLabels.push({ day: d.getDate(), offset: i, isToday: i === GANTT_TODAY_IDX });
+    if (d.getDate() === 1 || i === 0) months.push({ i, label: `${d.getFullYear()}.${d.getMonth() + 1}` });
+    if (i % 2 === 0) labels.push({ i, day: d.getDate(), isToday: i === GANTT_TODAY_IDX });
   }
+
   return (
-    <div style={{ borderBottom: `1px solid ${B}`, background: S, padding: "5px 0 6px", flexShrink: 0 }}>
-      <div style={{ position: "relative", height: 13, marginLeft: 72, marginRight: 4 }}>
-        {dayLabels.map(d => (
-          <span key={d.offset} style={{ position: "absolute", left: pct(d.offset), transform: "translateX(-50%)", fontSize: 9, color: d.isToday ? ACC : T4, fontWeight: d.isToday ? 700 : 400, pointerEvents: "none" }}>{d.day}</span>
-        ))}
-        {monthMarkers.map(m => (
-          <span key={m.label} style={{ position: "absolute", left: pct(m.offset), transform: "translateX(-50%)", fontSize: 9, color: T2, fontWeight: 600, pointerEvents: "none" }}>{m.label}</span>
-        ))}
-      </div>
-      <div style={{ paddingLeft: 4, paddingRight: 4 }}>
+    <div style={{ borderBottom: `1px solid ${B}`, background: S, flexShrink: 0, display: "flex", overflow: "hidden" }}>
+      {/* Fixed name column */}
+      <div style={{ width: GANTT_NAME_W, flexShrink: 0, paddingTop: 18 }}>
         {GANTT_PROJECTS.map(p => (
-          <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 3 }}>
-            <span style={{ width: 66, textAlign: "right", fontSize: 8.5, flexShrink: 0, color: activeId === p.id ? p.color : T4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
-            <div style={{ flex: 1, height: 9, background: SU, borderRadius: 5, position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", left: pct(GANTT_TODAY_IDX), top: 0, bottom: 0, width: 1, background: ACC, opacity: 0.4, pointerEvents: "none" }} />
-              <button onClick={() => onSelect(p.id)} title={p.name}
-                style={{ position: "absolute", left: pct(p.gs), width: `${((p.ge - p.gs + 1) / GANTT_DAYS) * 100}%`, top: 0, height: "100%", background: p.color, opacity: activeId === p.id ? 1 : 0.28, borderRadius: 5, boxShadow: activeId === p.id ? `0 0 8px ${p.color}77` : "none", transition: "all 0.2s", cursor: "pointer", border: "none" }} />
-            </div>
+          <div key={p.id} style={{ height: BAR_H + 5, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 8 }}>
+            <span style={{ fontSize: 9, color: activeId === p.id ? p.color : T4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: GANTT_NAME_W - 10, fontWeight: activeId === p.id ? 600 : 400 }}>{p.name}</span>
           </div>
         ))}
+      </div>
+      {/* Scrollable date+bar area */}
+      <div ref={scrollRef} style={{ flex: 1, overflowX: "auto", overflowY: "hidden", scrollbarWidth: "none" as const }}>
+        <div style={{ width: CONTENT_W, paddingBottom: 6, position: "relative" }}>
+          {/* Date/month header */}
+          <div style={{ position: "relative", height: 18, marginBottom: 2 }}>
+            {months.map(m => (
+              <span key={m.label} style={{ position: "absolute", left: m.i * GANTT_DAY_W + 2, fontSize: 9, color: T2, fontWeight: 600, pointerEvents: "none", whiteSpace: "nowrap" }}>{m.label}</span>
+            ))}
+            {labels.map(d => (
+              <span key={d.i} style={{ position: "absolute", left: d.i * GANTT_DAY_W, transform: "translateX(-50%)", fontSize: 9, color: d.isToday ? ACC : T5, fontWeight: d.isToday ? 700 : 400, pointerEvents: "none" }}>{d.day}</span>
+            ))}
+          </div>
+          {/* Today vertical dashed line (spans all rows) */}
+          <div style={{ position: "absolute", left: GANTT_TODAY_IDX * GANTT_DAY_W, top: 0, bottom: 0, width: 1, background: `repeating-linear-gradient(to bottom, #e05050 0px, #e05050 4px, transparent 4px, transparent 8px)`, opacity: 0.7, zIndex: 2, pointerEvents: "none" }} />
+          {/* Bars */}
+          {GANTT_PROJECTS.map(p => {
+            const barW = (p.ge - p.gs) * GANTT_DAY_W;
+            return (
+              <div key={p.id} style={{ position: "relative", height: BAR_H, marginBottom: 5, background: `${SU}88`, borderRadius: 5, overflow: "hidden" }}>
+                <button onClick={() => onSelect(p.id)} title={p.name}
+                  style={{ position: "absolute", left: p.gs * GANTT_DAY_W, width: barW, top: 0, height: "100%", background: p.color, opacity: activeId === p.id ? 0.92 : 0.28, borderRadius: 5, border: "none", cursor: "pointer", display: "flex", alignItems: "center", paddingLeft: 7, overflow: "hidden", boxShadow: activeId === p.id ? `0 0 10px ${p.color}66` : "none", transition: "all 0.2s" }}>
+                  {barW > 50 && <span style={{ fontSize: 10, color: "#fff", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", pointerEvents: "none" }}>{p.name}</span>}
+                </button>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -323,49 +353,142 @@ function TodoPanel({ projects, activeId, onSelectProject, todos, onToggle, quest
   );
 }
 
-// ─── Stats View ───────────────────────────────────────────────────────────────
-function StatsView() {
-  const maxMins = Math.max(...WEEK_STATS.map(d => d.mins));
-  const total = PROJ_STATS.reduce((a, b) => a + b.mins, 0);
+// ─── Archive View (일일 아카이브) ─────────────────────────────────────────────
+const ARCHIVE_TABS = ["일일 아카이브", "개요", "과제", "포커스"];
+// Fake screenshot thumbnails using colored gradients
+const FAKE_THUMBS = [
+  { bg: "linear-gradient(135deg,#1a1a2e,#16213e)", label: "VSCode" },
+  { bg: "linear-gradient(135deg,#2d1b4e,#1a0e2e)", label: "Figma" },
+  { bg: "linear-gradient(135deg,#0d2137,#0a1628)", label: "Browser" },
+  { bg: "linear-gradient(135deg,#1e3a1e,#0d1f0d)", label: "Terminal" },
+  { bg: "linear-gradient(135deg,#3a1a00,#1f0e00)", label: "Photoshop" },
+  { bg: "linear-gradient(135deg,#1a2a3a,#0d1520)", label: "Discord" },
+];
+
+function ArchiveView({ settings, onUpdateSettings }: { settings: AppSettings; onUpdateSettings: (s: AppSettings) => void }) {
+  const [dateOffset, setDateOffset] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
+  const [thumbIdx, setThumbIdx] = useState(0);
+  const [journal, setJournal] = useState("");
+
+  const archiveDate = new Date(TODAY);
+  archiveDate.setDate(TODAY.getDate() + dateOffset);
+  const dateStr = archiveDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  const isToday = dateOffset === 0;
+
+  // Sessions for archive date — use real sessions for today, empty for others
+  const archiveSessions: Session[] = isToday ? MOCK_SESSIONS : [];
+  const totalFocusMins = isToday ? 390 : 0;
+  const th = Math.floor(totalFocusMins / 60);
+  const tm = totalFocusMins % 60;
+
   return (
-    <div style={{ flex: 1, overflow: "auto", padding: "16px 20px", display: "flex", flexDirection: "column", gap: 20 }}>
-      <div>
-        <p style={{ fontSize: 10, fontWeight: 600, color: T3, margin: "0 0 10px", letterSpacing: "0.08em", textTransform: "uppercase" }}>주간 집중 시간</p>
-        {WEEK_STATS.map(d => (
-          <div key={d.label} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
-            <span style={{ width: 26, fontSize: 10, color: d.label === "오늘" ? ACC : T4, fontWeight: d.label === "오늘" ? 700 : 400, textAlign: "right", flexShrink: 0 }}>{d.label}</span>
-            <div style={{ flex: 1, height: 10, background: SU, borderRadius: 5, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${(d.mins / maxMins) * 100}%`, background: d.label === "오늘" ? ACC : "#4a90e2", borderRadius: 5, opacity: d.label === "오늘" ? 1 : 0.55, transition: "width 0.6s" }} />
-            </div>
-            <span style={{ width: 38, fontSize: 10, color: T4, fontVariantNumeric: "tabular-nums", textAlign: "right" }}>{Math.floor(d.mins / 60)}h {d.mins % 60}m</span>
-          </div>
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      {/* Header tabs + date nav */}
+      <div style={{ borderBottom: `1px solid ${B}`, padding: "6px 16px", display: "flex", alignItems: "center", gap: 4, flexShrink: 0, background: S }}>
+        {ARCHIVE_TABS.map((tab, i) => (
+          <button key={tab} onClick={() => setActiveTab(i)}
+            style={{ padding: "4px 12px", borderRadius: 6, background: activeTab === i ? SU : "transparent", border: "none", color: activeTab === i ? T1 : T4, fontSize: 12, fontWeight: activeTab === i ? 600 : 400, cursor: "pointer" }}>
+            {tab}
+          </button>
         ))}
-      </div>
-      <div>
-        <p style={{ fontSize: 10, fontWeight: 600, color: T3, margin: "0 0 10px", letterSpacing: "0.08em", textTransform: "uppercase" }}>오늘의 프로젝트 분포</p>
-        <div style={{ height: 12, borderRadius: 6, overflow: "hidden", display: "flex", marginBottom: 12 }}>
-          {PROJ_STATS.map(p => <div key={p.name} style={{ flex: p.mins, background: p.color }} />)}
+        <div style={{ flex: 1 }} />
+        <button onClick={() => setDateOffset(o => o - 1)}
+          style={{ background: "transparent", border: "none", color: T3, fontSize: 16, cursor: "pointer", padding: "0 4px" }}>←</button>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "3px 10px", background: SU, borderRadius: 6, border: `1px solid ${B}` }}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={T3} strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span style={{ fontSize: 12, color: T1, fontWeight: 600 }}>{dateStr}</span>
         </div>
-        {PROJ_STATS.map(p => (
-          <div key={p.name} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-            <div style={{ width: 8, height: 8, borderRadius: 2, background: p.color, flexShrink: 0 }} />
-            <span style={{ flex: 1, fontSize: 11, color: T2 }}>{p.name}</span>
-            <span style={{ fontSize: 10, color: T4, fontVariantNumeric: "tabular-nums" }}>{Math.floor(p.mins / 60)}h {p.mins % 60}m</span>
-          </div>
-        ))}
+        <button onClick={() => setDateOffset(o => Math.min(0, o + 1))}
+          style={{ background: "transparent", border: "none", color: T3, fontSize: 16, cursor: "pointer", padding: "0 4px" }}>→</button>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-        {[
-          { label: "오늘 집중", value: `6h 30m` },
-          { label: "이번 주", value: `${Math.floor(WEEK_STATS.reduce((a, b) => a + b.mins, 0) / 60)}h` },
-          { label: "최고 연속", value: "5일" },
-          { label: "주요 활동", value: "오전" },
-        ].map(card => (
-          <div key={card.label} style={{ background: SU, borderRadius: 8, padding: "10px 12px", border: `1px solid ${B}` }}>
-            <p style={{ fontSize: 10, color: T4, margin: "0 0 4px" }}>{card.label}</p>
-            <p style={{ fontSize: 17, fontWeight: 700, color: T1, margin: 0, fontVariantNumeric: "tabular-nums" }}>{card.value}</p>
+
+      {/* Body */}
+      <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
+        {/* Left: journal + gallery */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", borderRight: `1px solid ${B}` }}>
+          {/* Visual recap button + date */}
+          <div style={{ padding: "16px 20px 8px", flexShrink: 0 }}>
+            <button style={{ display: "flex", alignItems: "center", gap: 7, padding: "6px 14px", borderRadius: 8, background: SU, border: `1px solid ${BH}`, color: T2, fontSize: 12, cursor: "pointer", marginBottom: 16 }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"/></svg>
+              비주얼 리캡
+            </button>
+            <p style={{ fontSize: 28, fontWeight: 700, color: T1, margin: "0 0 12px", lineHeight: 1.2 }}>{dateStr}</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <span style={{ fontSize: 11, color: T4, fontWeight: 600 }}>여정 로그</span>
+              <div style={{ flex: 1, height: 1, background: B }} />
+            </div>
           </div>
-        ))}
+          {/* Journal area */}
+          <div style={{ flex: 1, overflow: "auto", padding: "0 20px" }}>
+            {journal ? (
+              <p style={{ fontSize: 13, color: T2, lineHeight: 1.8 }}>{journal}</p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8 }}>
+                <p style={{ fontSize: 13, color: T5, fontStyle: "italic", margin: 0 }}>이 날에는 활동을 기록하지 않았습니다.</p>
+                <textarea value={journal} onChange={e => setJournal(e.target.value)}
+                  placeholder="오늘의 기록을 남겨보세요..."
+                  style={{ width: "100%", minHeight: 60, background: "transparent", border: "none", borderBottom: `1px solid ${B}`, color: T2, fontSize: 12, padding: "6px 0", outline: "none", lineHeight: 1.7, resize: "none", boxSizing: "border-box" as const }} />
+              </div>
+            )}
+            {/* Screenshot gallery */}
+            {isToday && (
+              <div style={{ marginTop: 20 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6, marginBottom: 8 }}>
+                  {FAKE_THUMBS.map((t, i) => (
+                    <button key={i} onClick={() => setThumbIdx(i)}
+                      style={{ aspectRatio: "16/9", borderRadius: 6, background: t.bg, border: `2px solid ${thumbIdx === i ? ACC : "transparent"}`, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", transition: "border-color 0.15s" }}>
+                      <span style={{ fontSize: 8, color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>{t.label}</span>
+                    </button>
+                  ))}
+                </div>
+                {/* Selected thumb preview */}
+                <div style={{ borderRadius: 8, background: FAKE_THUMBS[thumbIdx].bg, aspectRatio: "16/9", display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${B}`, position: "relative" }}>
+                  <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontWeight: 600 }}>{FAKE_THUMBS[thumbIdx].label}</span>
+                  <div style={{ position: "absolute", bottom: 8, right: 10, fontSize: 10, color: "rgba(255,255,255,0.4)", fontFamily: "monospace" }}>{thumbIdx + 1}/{FAKE_THUMBS.length}</div>
+                </div>
+              </div>
+            )}
+          </div>
+          {/* Bottom action */}
+          <div style={{ borderTop: `1px solid ${B}`, padding: "8px 20px", flexShrink: 0 }}>
+            <button style={{ background: "transparent", border: "none", color: T4, fontSize: 12, cursor: "pointer", padding: "4px 0" }}>
+              🗂 작업 로그 추가
+            </button>
+          </div>
+        </div>
+
+        {/* Right: Timetable */}
+        <div style={{ width: 240, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div style={{ borderBottom: `1px solid ${B}`, padding: "7px 12px", display: "flex", alignItems: "center", gap: 6, flexShrink: 0, background: S }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={ACC} strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span style={{ fontSize: 11, fontWeight: 600, color: T2 }}>타임테이블</span>
+            <div style={{ flex: 1 }} />
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={T4} strokeWidth="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+          </div>
+          <div style={{ flex: 1, overflow: "hidden" }}>
+            <TimeTableGraph
+              sessions={archiveSessions}
+              date={archiveDate}
+              projects={TIMETABLE_PROJECTS}
+              settings={settings}
+              onUpdateSettings={onUpdateSettings}
+              renderMode="fixed"
+              nightTimeStart={24}
+            />
+          </div>
+          {/* Focus stats footer */}
+          <div style={{ borderTop: `1px solid ${B}`, padding: "10px 12px", background: S, flexShrink: 0, display: "flex", gap: 16 }}>
+            <div>
+              <p style={{ fontSize: 10, color: T4, margin: "0 0 2px" }}>총 집중 시간</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: T1, margin: 0, fontVariantNumeric: "tabular-nums" }}>{th}h {tm}m</p>
+            </div>
+            <div>
+              <p style={{ fontSize: 10, color: T4, margin: "0 0 2px" }}>주요 활동</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: T1, margin: 0 }}>{isToday ? "오전" : "—"}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -465,37 +588,59 @@ function PomodoroView() {
 
 // ─── Calendar View ────────────────────────────────────────────────────────────
 function CalendarView() {
+  const [weekOffset, setWeekOffset] = useState(0);
   const now = new Date();
-  const weekStart = new Date(now);
-  weekStart.setDate(now.getDate() - now.getDay());
-  weekStart.setHours(0, 0, 0, 0);
+  const baseWeekStart = new Date(now);
+  baseWeekStart.setDate(now.getDate() - now.getDay());
+  baseWeekStart.setHours(0, 0, 0, 0);
+  const weekStart = new Date(baseWeekStart);
+  weekStart.setDate(weekStart.getDate() + weekOffset * 7);
+
   const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(weekStart); d.setDate(weekStart.getDate() + i); return d; });
   const DAY_LABELS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const TOTAL = 1440;
-  const todayIdx = now.getDay();
+  const todayStr = now.toDateString();
   const nowMins = now.getHours() * 60 + now.getMinutes();
   const scrollRef = useRef<HTMLDivElement>(null);
-  useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = (8 / 24) * scrollRef.current.scrollHeight * 0.8; }, []);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      const h = scrollRef.current.scrollHeight;
+      scrollRef.current.scrollTop = (h / 24) * 1; // scroll to 01:00 so early sessions visible
+    }
+  }, []);
 
   const monthStr = weekStart.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+  // Generate sessions per day for any week offset (shift session times for other weeks)
+  const getSessionsForDay = (dayIdx: number) => {
+    const base = WEEK_SESSIONS[dayIdx] || [];
+    if (weekOffset === 0) return base;
+    // For other weeks: shift session times slightly based on weekOffset for variety
+    const shift = (weekOffset * 37) % 60;
+    return base.map(s => ({ ...s, s: Math.max(0, s.s + shift), e: Math.max(30, s.e + shift) }));
+  };
 
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
       {/* Header */}
       <div style={{ borderBottom: `1px solid ${B}`, padding: "8px 16px", display: "flex", alignItems: "center", gap: 16, flexShrink: 0, background: S }}>
         <span style={{ fontSize: 13, fontWeight: 600, color: T1 }}>캘린더</span>
-        <span style={{ fontSize: 13, color: T4 }}>반복 루틴</span>
+        <span style={{ fontSize: 13, color: T4, cursor: "pointer" }}>반복 루틴</span>
         <div style={{ flex: 1 }} />
         <span style={{ fontSize: 13, fontWeight: 600, color: T1 }}>{monthStr}</span>
-        {["←", "오늘", "→"].map(l => (
-          <button key={l} style={{ background: SU, border: `1px solid ${B}`, borderRadius: 5, color: T2, fontSize: 11, padding: "3px 8px", cursor: "pointer" }}>{l}</button>
-        ))}
+        <button onClick={() => setWeekOffset(o => o - 1)}
+          style={{ background: SU, border: `1px solid ${B}`, borderRadius: 5, color: T2, fontSize: 13, padding: "2px 10px", cursor: "pointer" }}>←</button>
+        <button onClick={() => setWeekOffset(0)}
+          style={{ background: weekOffset === 0 ? `${ACC}22` : SU, border: `1px solid ${weekOffset === 0 ? ACC + "44" : B}`, borderRadius: 5, color: weekOffset === 0 ? ACC : T2, fontSize: 11, padding: "3px 8px", cursor: "pointer" }}>오늘</button>
+        <button onClick={() => setWeekOffset(o => o + 1)}
+          style={{ background: SU, border: `1px solid ${B}`, borderRadius: 5, color: T2, fontSize: 13, padding: "2px 10px", cursor: "pointer" }}>→</button>
       </div>
       {/* Day headers */}
-      <div style={{ display: "grid", gridTemplateColumns: "40px repeat(7, 1fr)", borderBottom: `1px solid ${B}`, flexShrink: 0, background: S }}>
+      <div style={{ display: "grid", gridTemplateColumns: "44px repeat(7, 1fr)", borderBottom: `1px solid ${B}`, flexShrink: 0, background: S }}>
         <div />
         {days.map((d, i) => {
-          const isToday = d.toDateString() === now.toDateString();
+          const isToday = d.toDateString() === todayStr;
           return (
             <div key={i} style={{ textAlign: "center", padding: "6px 4px", borderLeft: `1px solid ${B}` }}>
               <div style={{ fontSize: 9, color: T4, fontWeight: 600, letterSpacing: "0.08em", marginBottom: 3 }}>{DAY_LABELS[i]}</div>
@@ -505,7 +650,7 @@ function CalendarView() {
         })}
       </div>
       {/* Scrollable grid */}
-      <div ref={scrollRef} style={{ flex: 1, overflow: "auto", display: "grid", gridTemplateColumns: "40px repeat(7, 1fr)" }}>
+      <div ref={scrollRef} style={{ flex: 1, overflow: "auto", display: "grid", gridTemplateColumns: "44px repeat(7, 1fr)" }}>
         {/* Time column */}
         <div style={{ position: "relative", height: 1200 }}>
           {Array.from({ length: 13 }, (_, i) => i * 2).map(h => (
@@ -516,10 +661,10 @@ function CalendarView() {
         </div>
         {/* Day columns */}
         {days.map((d, i) => {
-          const sessions = WEEK_SESSIONS[i] || [];
-          const isToday = i === todayIdx;
+          const sessions = getSessionsForDay(i);
+          const isToday = d.toDateString() === todayStr;
           return (
-            <div key={i} style={{ borderLeft: `1px solid ${B}`, position: "relative", height: 1200, background: isToday ? `${ACC}04` : "transparent" }}>
+            <div key={i} style={{ borderLeft: `1px solid ${B}`, position: "relative", height: 1200, background: isToday ? `${ACC}05` : "transparent" }}>
               {Array.from({ length: 25 }, (_, h) => (
                 <div key={h} style={{ position: "absolute", top: `${(h / 24) * 100}%`, left: 0, right: 0, borderTop: `1px solid ${B}22`, pointerEvents: "none" }} />
               ))}
@@ -530,7 +675,7 @@ function CalendarView() {
                 </div>
               )}
               {sessions.map((s, j) => (
-                <div key={j} style={{ position: "absolute", top: `${(s.s / TOTAL) * 100}%`, height: `${((s.e - s.s) / TOTAL) * 100}%`, left: 2, right: 2, background: s.color, opacity: 0.82, borderRadius: 4, padding: "2px 4px", overflow: "hidden" }}>
+                <div key={j} style={{ position: "absolute", top: `${(s.s / TOTAL) * 100}%`, height: `${Math.max(0.5, (s.e - s.s) / TOTAL) * 100}%`, left: 2, right: 2, background: s.color, opacity: 0.82, borderRadius: 4, padding: "2px 4px", overflow: "hidden" }}>
                   <span style={{ fontSize: 9, color: "#fff", fontWeight: 600, whiteSpace: "nowrap" }}>{s.name}</span>
                 </div>
               ))}
@@ -592,7 +737,7 @@ export default function DemoApp() {
     ));
 
   const viewLabel: Record<string, string> = {
-    day: "오늘", calendar: "캘린더", pomodoro: "포모도로", stats: "통계", settings: "설정",
+    day: "오늘", calendar: "캘린더", pomodoro: "포모도로", stats: "일일 아카이브", settings: "설정",
   };
 
   return (
@@ -652,31 +797,7 @@ export default function DemoApp() {
 
             {activeView === "calendar" && <CalendarView />}
             {activeView === "pomodoro" && <PomodoroView />}
-            {activeView === "stats" && (
-              <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
-                <div style={{ flex: 1, overflow: "auto", display: "flex", flexDirection: "column" }}>
-                  <div style={{ padding: "10px 16px", borderBottom: `1px solid ${B}`, background: S, flexShrink: 0 }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: T1 }}>통계</span>
-                  </div>
-                  <StatsView />
-                </div>
-                <div style={{ width: 220, borderLeft: `1px solid ${B}`, overflow: "hidden", display: "flex", flexDirection: "column" }}>
-                  <div style={{ borderBottom: `1px solid ${B}`, padding: "7px 12px", display: "flex", alignItems: "center", gap: 6, flexShrink: 0, background: S }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={ACC} strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: T2 }}>타임테이블</span>
-                  </div>
-                  <TimeTableGraph
-                    sessions={MOCK_SESSIONS}
-                    date={TODAY}
-                    projects={TIMETABLE_PROJECTS}
-                    settings={settings}
-                    onUpdateSettings={setSettings}
-                    renderMode="fixed"
-                    nightTimeStart={24}
-                  />
-                </div>
-              </div>
-            )}
+            {activeView === "stats" && <ArchiveView settings={settings} onUpdateSettings={setSettings} />}
 
             {activeView === "settings" && (
               <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
