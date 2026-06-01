@@ -602,6 +602,8 @@ function CalendarView() {
   const todayStr = now.toDateString();
   const nowMins = now.getHours() * 60 + now.getMinutes();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const touchX = useRef(0);
+  const touchY = useRef(0);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -609,6 +611,18 @@ function CalendarView() {
       scrollRef.current.scrollTop = (h / 24) * 1; // scroll to 01:00 so early sessions visible
     }
   }, []);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchX.current = e.touches[0].clientX;
+    touchY.current = e.touches[0].clientY;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    const dy = e.changedTouches[0].clientY - touchY.current;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      setWeekOffset(o => dx < 0 ? o + 1 : o - 1);
+    }
+  };
 
   const monthStr = weekStart.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
@@ -622,7 +636,7 @@ function CalendarView() {
   };
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       {/* Header */}
       <div style={{ borderBottom: `1px solid ${B}`, padding: "8px 16px", display: "flex", alignItems: "center", gap: 16, flexShrink: 0, background: S }}>
         <span style={{ fontSize: 13, fontWeight: 600, color: T1 }}>캘린더</span>
