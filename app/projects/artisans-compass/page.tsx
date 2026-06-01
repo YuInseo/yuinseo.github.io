@@ -77,63 +77,21 @@ export default function ArtisansCompassPage() {
         <ScrollReveal>
           <p className="mb-8 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">기타 기능</p>
         </ScrollReveal>
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          <ScrollReveal delay={0}>
-            <div>
-              <p className="mb-2 text-[14px] font-semibold text-[var(--t1)]">위젯 모드</p>
-              <p className="mb-3 text-[13px] leading-relaxed text-[var(--t4)]">바탕화면에 올려두고 쓸 수 있어요. 위치·크기 잠금 가능.</p>
-              <ul className="space-y-1.5">
-                {["항상 위 (Always on top) 설정", "위치·크기 잠금으로 실수 방지", "투명도 조절 가능", "메인 화면과 다른 테마 적용"].map(p => (
-                  <li key={p} className="flex items-start gap-2 text-[12px] text-[var(--t4)]">
-                    <span className="mt-[5px] h-1 w-1 shrink-0 rounded-full bg-[var(--border-hi)]" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </ScrollReveal>
-          <ScrollReveal delay={100}>
-            <div>
-              <p className="mb-2 text-[14px] font-semibold text-[var(--t1)]">테마</p>
-              <p className="mb-3 text-[13px] leading-relaxed text-[var(--t4)]">여러 색상 테마. 위젯과 메인 화면에 각각 적용 가능.</p>
-              <ul className="space-y-1.5">
-                {["다크 / 라이트 기반 다양한 색상 팔레트", "메인 화면과 위젯에 각각 다른 테마", "악센트 컬러 커스터마이즈", "프로젝트별 색상 직접 지정"].map(p => (
-                  <li key={p} className="flex items-start gap-2 text-[12px] text-[var(--t4)]">
-                    <span className="mt-[5px] h-1 w-1 shrink-0 rounded-full bg-[var(--border-hi)]" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </ScrollReveal>
-          <ScrollReveal delay={200}>
-            <div>
-              <p className="mb-2 text-[14px] font-semibold text-[var(--t1)]">일기</p>
-              <p className="mb-3 text-[13px] leading-relaxed text-[var(--t4)]">모바일에서 버튼 하나로 기록.</p>
-              <ul className="space-y-1.5">
-                {["버튼 한 번으로 일기 화면 즉시 실행", "오늘 날짜 제목 자동 입력", "감정 이모지 태그", "사진 최대 4장 첨부", "해당 날짜 아카이브에 연결"].map(p => (
-                  <li key={p} className="flex items-start gap-2 text-[12px] text-[var(--t4)]">
-                    <span className="mt-[5px] h-1 w-1 shrink-0 rounded-full bg-[var(--border-hi)]" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </ScrollReveal>
-          <ScrollReveal delay={300}>
-            <div>
-              <p className="mb-2 text-[14px] font-semibold text-[var(--t1)]">설정</p>
-              <p className="mb-3 text-[13px] leading-relaxed text-[var(--t4)]">타임테이블 카테고리, 작업 외 앱, 아카이브 모드 등.</p>
-              <ul className="space-y-1.5">
-                {["자동 추적 앱 목록 관리", "타임테이블 그리드 간격 설정", "야간 시간 구간 마커", "하단 바 탭 구성", "알림 및 내보내기 (예정)"].map(p => (
-                  <li key={p} className="flex items-start gap-2 text-[12px] text-[var(--t4)]">
-                    <span className="mt-[5px] h-1 w-1 shrink-0 rounded-full bg-[var(--border-hi)]" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </ScrollReveal>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {[
+            { icon: "⬛", label: "위젯 모드", desc: "바탕화면에 올려두고 쓰는 모드. 항상 위 고정, 위치·크기 잠금, 투명도 조절." },
+            { icon: "🎨", label: "테마", desc: "다크·라이트 기반 색상 팔레트. 위젯과 메인 화면에 각각 다른 테마 적용 가능." },
+            { icon: "📓", label: "일기", desc: "모바일 앱에서 버튼 하나로 일기 화면 즉시 실행. 감정 태그·사진 첨부 지원." },
+            { icon: "⚙️", label: "설정", desc: "타임라인 그리드 간격, 야간 구간 마커, 하단 바 탭 구성 등 세부 조정 가능." },
+          ].map((f, i) => (
+            <ScrollReveal key={f.label} delay={i * 80}>
+              <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-5">
+                <p className="mb-3 text-xl">{f.icon}</p>
+                <p className="mb-1.5 text-[14px] font-semibold text-[var(--t1)]">{f.label}</p>
+                <p className="text-[13px] leading-relaxed text-[var(--t4)]">{f.desc}</p>
+              </div>
+            </ScrollReveal>
+          ))}
         </div>
       </section>
 
