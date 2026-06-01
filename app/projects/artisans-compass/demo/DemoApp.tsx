@@ -932,10 +932,90 @@ function MobileArchiveView() {
   );
 }
 
+// ─── Diary Modal ─────────────────────────────────────────────────────────────
+const DIARY_EMOTIONS = [
+  { emoji: "😊", label: "좋음" }, { emoji: "😐", label: "보통" },
+  { emoji: "😔", label: "슬픔" }, { emoji: "😤", label: "짜증" },
+  { emoji: "🔥", label: "열정" }, { emoji: "😴", label: "피곤" },
+];
+
+function DiaryModal({ onClose }: { onClose: () => void }) {
+  const [emotion, setEmotion] = useState("");
+  const [text, setText] = useState("");
+  const [saved, setSaved] = useState(false);
+  const dateStr = TODAY.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" });
+  const canSave = text.trim().length > 0 || emotion !== "";
+
+  if (saved) {
+    return (
+      <div style={{ position: "absolute", inset: 0, zIndex: 30, background: BG, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12 }}>
+        <span style={{ fontSize: 52 }}>✨</span>
+        <p style={{ fontSize: 17, fontWeight: 700, color: T1, margin: 0 }}>저장했어요</p>
+        <p style={{ fontSize: 12, color: T4, margin: 0 }}>{dateStr}</p>
+        <button onClick={onClose} style={{ marginTop: 12, padding: "9px 28px", borderRadius: 10, background: ACC, border: "none", color: BG, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>닫기</button>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ position: "absolute", inset: 0, zIndex: 30, background: BG, display: "flex", flexDirection: "column", animation: "slideUpModal 0.28s cubic-bezier(0.16,1,0.3,1)" }}>
+      {/* Header */}
+      <div style={{ padding: "12px 14px 10px", borderBottom: `1px solid ${B}`, display: "flex", alignItems: "center", gap: 10, flexShrink: 0, background: S }}>
+        <button onClick={onClose} style={{ background: "none", border: "none", color: T3, cursor: "pointer", display: "flex", padding: 4 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
+        </button>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: T1, margin: 0 }}>{dateStr}</p>
+          <p style={{ fontSize: 10, color: T4, margin: "1px 0 0" }}>일기</p>
+        </div>
+        <button onClick={() => canSave && setSaved(true)}
+          style={{ padding: "6px 14px", borderRadius: 8, background: canSave ? ACC : T5, border: "none", color: canSave ? BG : T4, fontSize: 12, fontWeight: 700, cursor: canSave ? "pointer" : "default", transition: "all 0.2s" }}>
+          저장
+        </button>
+      </div>
+      {/* Emotion picker */}
+      <div style={{ padding: "12px 14px", borderBottom: `1px solid ${B}`, flexShrink: 0 }}>
+        <p style={{ fontSize: 10, color: T4, margin: "0 0 9px", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" as const }}>지금 기분</p>
+        <div style={{ display: "flex", gap: 6 }}>
+          {DIARY_EMOTIONS.map(e => (
+            <button key={e.emoji} onClick={() => setEmotion(em => em === e.emoji ? "" : e.emoji)}
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "7px 0", borderRadius: 10, border: `1.5px solid ${emotion === e.emoji ? ACC + "88" : B}`, background: emotion === e.emoji ? `${ACC}20` : SU, cursor: "pointer", transition: "all 0.15s", flex: 1 }}>
+              <span style={{ fontSize: 18 }}>{e.emoji}</span>
+              <span style={{ fontSize: 9, color: emotion === e.emoji ? ACC : T5, fontWeight: 600 }}>{e.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      {/* Text area */}
+      <div style={{ flex: 1, padding: "14px 16px 0", display: "flex", flexDirection: "column" }}>
+        <textarea
+          value={text}
+          onChange={e => setText(e.target.value)}
+          placeholder={"오늘 어떤 하루였나요?\n생각나는 것들을 자유롭게 적어보세요."}
+          style={{ flex: 1, background: "transparent", border: "none", color: T1, fontSize: 14, lineHeight: 1.85, outline: "none", resize: "none", padding: 0, fontFamily: "inherit" }}
+        />
+      </div>
+      {/* Photo attach */}
+      <div style={{ padding: "10px 14px 14px", borderTop: `1px solid ${B}`, flexShrink: 0, display: "flex", alignItems: "center", gap: 8 }}>
+        <button style={{ display: "flex", alignItems: "center", gap: 5, padding: "7px 12px", borderRadius: 8, background: SU, border: `1px solid ${B}`, color: T3, fontSize: 12, cursor: "pointer" }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          사진 추가
+        </button>
+        <span style={{ fontSize: 11, color: T5 }}>최대 4장</span>
+      </div>
+    </div>
+  );
+}
+
 // ─── Mobile Demo App ──────────────────────────────────────────────────────────
 type MobileView = "day" | "calendar" | "pomodoro" | "stats" | "settings";
 
-function MobileDemoApp({ activeView, onViewChange }: { activeView: MobileView; onViewChange: (v: MobileView) => void }) {
+function MobileDemoApp({ activeView, onViewChange, diaryOpen = false, onDiaryOpenChange }: {
+  activeView: MobileView;
+  onViewChange: (v: MobileView) => void;
+  diaryOpen?: boolean;
+  onDiaryOpenChange?: (open: boolean) => void;
+}) {
   const [projects, setProjects] = useState(INIT_PROJECTS);
   const [activeId, setActiveId] = useState("p9");
   const [quest, setQuest] = useState("");
@@ -970,7 +1050,10 @@ function MobileDemoApp({ activeView, onViewChange }: { activeView: MobileView; o
 
   return (
     <div className="artisans-demo dark" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', sans-serif" }}>
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BH}`, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.55)", height: "min(640px, 82vh)", display: "flex", flexDirection: "column" }}>
+      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BH}`, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.55)", height: "min(640px, 82vh)", display: "flex", flexDirection: "column", position: "relative" }}>
+
+        {/* Diary Modal */}
+        {diaryOpen && <DiaryModal onClose={() => onDiaryOpenChange?.(false)} />}
 
         {/* Header */}
         <div style={{ background: S, borderBottom: `1px solid ${B}`, padding: "10px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
@@ -1057,14 +1140,23 @@ function MobileDemoApp({ activeView, onViewChange }: { activeView: MobileView; o
         </div>
 
         {/* Bottom Nav */}
-        <div style={{ borderTop: `1px solid ${B}`, display: "grid", gridTemplateColumns: "repeat(5, 1fr)", background: S, flexShrink: 0 }}>
+        <div style={{ borderTop: `1px solid ${B}`, display: "grid", gridTemplateColumns: "repeat(5, 1fr) 44px", background: S, flexShrink: 0, alignItems: "center" }}>
           {NAV.map(tab => (
             <button key={tab.id} onClick={() => onViewChange(tab.id)}
-              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "10px 4px 8px", background: activeView === tab.id ? `${ACC}18` : "transparent", border: "none", cursor: "pointer", color: activeView === tab.id ? ACC : T4, transition: "all 0.15s" }}>
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "10px 4px 8px", background: activeView === tab.id && !diaryOpen ? `${ACC}18` : "transparent", border: "none", cursor: "pointer", color: activeView === tab.id && !diaryOpen ? ACC : T4, transition: "all 0.15s" }}>
               {tab.icon}
-              <span style={{ fontSize: 9, fontWeight: activeView === tab.id ? 600 : 400 }}>{tab.label}</span>
+              <span style={{ fontSize: 9, fontWeight: activeView === tab.id && !diaryOpen ? 600 : 400 }}>{tab.label}</span>
             </button>
           ))}
+          {/* Diary button */}
+          <button
+            onClick={() => onDiaryOpenChange?.(!diaryOpen)}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: "50%", background: diaryOpen ? ACC : `${ACC}22`, border: `1.5px solid ${diaryOpen ? ACC : ACC + "44"}`, cursor: "pointer", color: diaryOpen ? BG : ACC, margin: "0 auto", transition: "all 0.2s", flexShrink: 0 }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
         </div>
 
       </div>
@@ -1074,7 +1166,7 @@ function MobileDemoApp({ activeView, onViewChange }: { activeView: MobileView; o
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 export type { MobileView };
-export default function DemoApp({ mobileView, onMobileViewChange }: { mobileView?: MobileView; onMobileViewChange?: (v: MobileView) => void } = {}) {
+export default function DemoApp({ mobileView, onMobileViewChange, diaryOpen, onDiaryOpenChange }: { mobileView?: MobileView; onMobileViewChange?: (v: MobileView) => void; diaryOpen?: boolean; onDiaryOpenChange?: (open: boolean) => void } = {}) {
   const [projects, setProjects] = useState(INIT_PROJECTS);
   const [activeId, setActiveId] = useState("p9");
   const [activeView, setActiveView] = useState("day");
@@ -1169,6 +1261,8 @@ export default function DemoApp({ mobileView, onMobileViewChange }: { mobileView
       <MobileDemoApp
         activeView={mobileView ?? "day"}
         onViewChange={onMobileViewChange ?? (() => {})}
+        diaryOpen={diaryOpen}
+        onDiaryOpenChange={onDiaryOpenChange}
       />
     </div>
     </>
