@@ -801,6 +801,14 @@ function SettingsView({ settings, onUpdate }: { settings: AppSettings; onUpdate:
     { section: "일반", items: [
       { label: "작업 앱 필터", active: !!settings.filterTimelineByWorkApps, toggle: () => onUpdate({ ...settings, filterTimelineByWorkApps: !settings.filterTimelineByWorkApps }) },
     ]},
+    { section: "하단 바", items: [
+      { label: "탭 이름 표시", active: settings.bottomBarShowLabels !== false, toggle: () => onUpdate({ ...settings, bottomBarShowLabels: !(settings.bottomBarShowLabels !== false) }) },
+      { label: "오늘 탭", active: !(settings.bottomBarHiddenTabs ?? []).includes("day"), toggle: () => { const h: string[] = settings.bottomBarHiddenTabs ?? []; onUpdate({ ...settings, bottomBarHiddenTabs: h.includes("day") ? h.filter((t: string) => t !== "day") : [...h, "day"] }); } },
+      { label: "캘린더 탭", active: !(settings.bottomBarHiddenTabs ?? []).includes("calendar"), toggle: () => { const h: string[] = settings.bottomBarHiddenTabs ?? []; onUpdate({ ...settings, bottomBarHiddenTabs: h.includes("calendar") ? h.filter((t: string) => t !== "calendar") : [...h, "calendar"] }); } },
+      { label: "포모도로 탭", active: !(settings.bottomBarHiddenTabs ?? []).includes("pomodoro"), toggle: () => { const h: string[] = settings.bottomBarHiddenTabs ?? []; onUpdate({ ...settings, bottomBarHiddenTabs: h.includes("pomodoro") ? h.filter((t: string) => t !== "pomodoro") : [...h, "pomodoro"] }); } },
+      { label: "아카이브 탭", active: !(settings.bottomBarHiddenTabs ?? []).includes("stats"), toggle: () => { const h: string[] = settings.bottomBarHiddenTabs ?? []; onUpdate({ ...settings, bottomBarHiddenTabs: h.includes("stats") ? h.filter((t: string) => t !== "stats") : [...h, "stats"] }); } },
+      { label: "설정 탭", active: !(settings.bottomBarHiddenTabs ?? []).includes("settings"), toggle: () => { const h: string[] = settings.bottomBarHiddenTabs ?? []; onUpdate({ ...settings, bottomBarHiddenTabs: h.includes("settings") ? h.filter((t: string) => t !== "settings") : [...h, "settings"] }); } },
+    ]},
   ];
   return (
     <div style={{ flex: 1, overflow: "auto", padding: "16px 20px" }}>
@@ -1140,12 +1148,17 @@ function MobileDemoApp({ activeView, onViewChange, diaryOpen = false, onDiaryOpe
         </div>
 
         {/* Bottom Nav */}
-        <div style={{ borderTop: `1px solid ${B}`, display: "grid", gridTemplateColumns: "repeat(5, 1fr) 44px", background: S, flexShrink: 0, alignItems: "center" }}>
-          {NAV.map(tab => (
+        {(() => {
+          const hiddenTabs: string[] = settings.bottomBarHiddenTabs ?? [];
+          const showLabels = settings.bottomBarShowLabels !== false;
+          const visibleNav = NAV.filter(tab => !hiddenTabs.includes(tab.id));
+          return (
+          <div style={{ borderTop: `1px solid ${B}`, display: "grid", gridTemplateColumns: `repeat(${visibleNav.length}, 1fr) 44px`, background: S, flexShrink: 0, alignItems: "center" }}>
+          {visibleNav.map(tab => (
             <button key={tab.id} onClick={() => onViewChange(tab.id)}
-              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "10px 4px 8px", background: activeView === tab.id && !diaryOpen ? `${ACC}18` : "transparent", border: "none", cursor: "pointer", color: activeView === tab.id && !diaryOpen ? ACC : T4, transition: "all 0.15s" }}>
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: showLabels ? "10px 4px 8px" : "12px 4px", background: activeView === tab.id && !diaryOpen ? `${ACC}18` : "transparent", border: "none", cursor: "pointer", color: activeView === tab.id && !diaryOpen ? ACC : T4, transition: "all 0.15s" }}>
               {tab.icon}
-              <span style={{ fontSize: 9, fontWeight: activeView === tab.id && !diaryOpen ? 600 : 400 }}>{tab.label}</span>
+              {showLabels && <span style={{ fontSize: 9, fontWeight: activeView === tab.id && !diaryOpen ? 600 : 400 }}>{tab.label}</span>}
             </button>
           ))}
           {/* Diary button */}
@@ -1158,6 +1171,8 @@ function MobileDemoApp({ activeView, onViewChange, diaryOpen = false, onDiaryOpe
             </svg>
           </button>
         </div>
+          );
+        })()}
 
       </div>
     </div>
