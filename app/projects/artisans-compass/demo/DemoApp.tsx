@@ -1,21 +1,24 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
+import { useTheme } from "next-themes";
 import { TimeTableGraph } from "./artisans/components/dashboard/TimeTableGraph";
 import type { Session, Project, AppSettings } from "./artisans/types";
 
 // ─── Theme ────────────────────────────────────────────────────────────────────
-const BG  = "#0d0d0d";
-const S   = "#1a1714";
-const SU  = "#242120";
-const B   = "#2e2a27";
-const BH  = "#3e3a36";
-const T1  = "#f8f4ee";
-const T2  = "#c8bfb0";
-const T3  = "#8a8070";
-const T4  = "#5a5248";
-const T5  = "#3a3530";
-const ACC = "#f0a030";
+const DARK_COLORS = {
+  BG: "#0d0d0d", S: "#1a1714", SU: "#242120", B: "#2e2a27", BH: "#3e3a36",
+  T1: "#f8f4ee", T2: "#c8bfb0", T3: "#8a8070", T4: "#5a5248", T5: "#3a3530",
+  ACC: "#f0a030",
+};
+const LIGHT_COLORS = {
+  BG: "#faf8f4", S: "#f0ece5", SU: "#e4ddd4", B: "#d8d0c5", BH: "#c4bab0",
+  T1: "#1a1714", T2: "#4a433a", T3: "#857c70", T4: "#b0a898", T5: "#cec6b8",
+  ACC: "#c07020",
+};
+type DemoColors = typeof DARK_COLORS & { isDark: boolean };
+const DemoColorsContext = createContext<DemoColors>({ ...DARK_COLORS, isDark: true });
+const useDemoColors = () => useContext(DemoColorsContext);
 
 // ─── Dynamic today ────────────────────────────────────────────────────────────
 const TODAY = (() => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; })();
@@ -150,6 +153,7 @@ const BellIcon   = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="n
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 function Sidebar({ active, onSet }: { active: string; onSet: (v: string) => void }) {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = useDemoColors();
   const top = [
     { id: "day",      icon: <GridIcon /> },
     { id: "calendar", icon: <CalIcon /> },
@@ -183,6 +187,7 @@ const GANTT_DAY_W = 26; // px per day
 const GANTT_NAME_W = 80;
 
 function GanttView({ activeId, onSelect }: { activeId: string; onSelect: (id: string) => void }) {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = useDemoColors();
   const scrollRef = useRef<HTMLDivElement>(null);
   const CONTENT_W = GANTT_DAYS * GANTT_DAY_W;
   const BAR_H = 22;
@@ -246,6 +251,7 @@ function GanttView({ activeId, onSelect }: { activeId: string; onSelect: (id: st
 
 // ─── Recap (left panel) ───────────────────────────────────────────────────────
 function RecapPanel({ quest }: { quest: string }) {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = useDemoColors();
   return (
     <div style={{ borderRight: `1px solid ${B}`, background: S, display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "20px 14px", gap: 10 }}>
@@ -281,6 +287,7 @@ function TodoPanel({ projects, activeId, onSelectProject, todos, onToggle, quest
   quest: string; onSetQuest: (q: string) => void;
   onEndDay: () => void; dayEnded: boolean;
 }) {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = useDemoColors();
   const [showInput, setShowInput] = useState(false);
   const [inputVal, setInputVal] = useState("");
   const proj = projects.find(p => p.id === activeId) ?? projects[0];
@@ -366,6 +373,7 @@ const FAKE_THUMBS = [
 ];
 
 function ArchiveView({ settings, onUpdateSettings }: { settings: AppSettings; onUpdateSettings: (s: AppSettings) => void }) {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = useDemoColors();
   const [dateOffset, setDateOffset] = useState(0);
   const [activeTab, setActiveTab] = useState(0);
   const [thumbIdx, setThumbIdx] = useState(0);
@@ -496,6 +504,7 @@ function ArchiveView({ settings, onUpdateSettings }: { settings: AppSettings; on
 
 // ─── Pomodoro View ────────────────────────────────────────────────────────────
 function PomodoroView() {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = useDemoColors();
   const [running, setRunning] = useState(false);
   const [secs, setSecs] = useState(25 * 60);
   const [count, setCount] = useState(0);
@@ -588,6 +597,7 @@ function PomodoroView() {
 
 // ─── Calendar View ────────────────────────────────────────────────────────────
 function CalendarView() {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = useDemoColors();
   const [dayOffset, setDayOffset] = useState(0);   // offset from today (steps of 1 day)
   const [calOpen, setCalOpen] = useState(false);   // monthly mini-cal
   const [hourH, setHourH] = useState(50);          // px per hour (zoom)
@@ -792,6 +802,7 @@ function CalendarView() {
 
 // ─── Settings View ────────────────────────────────────────────────────────────
 function SettingsView({ settings, onUpdate }: { settings: AppSettings; onUpdate: (s: AppSettings) => void }) {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = useDemoColors();
   const rows = [
     { section: "타임라인", items: [
       { label: "현재 시간 표시", active: settings.showCurrentTimeIndicator !== false, toggle: () => onUpdate({ ...settings, showCurrentTimeIndicator: !settings.showCurrentTimeIndicator }) },
@@ -834,6 +845,7 @@ function SettingsView({ settings, onUpdate }: { settings: AppSettings; onUpdate:
 
 // ─── Mobile Pomodoro ─────────────────────────────────────────────────────────
 function MobilePomodoroView() {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = useDemoColors();
   const [running, setRunning] = useState(false);
   const [secs, setSecs] = useState(25 * 60);
   const [count, setCount] = useState(0);
@@ -893,6 +905,7 @@ function MobilePomodoroView() {
 
 // ─── Mobile Archive ───────────────────────────────────────────────────────────
 function MobileArchiveView() {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = useDemoColors();
   const [settings] = useState<AppSettings>(MOCK_SETTINGS);
   const [dateOffset, setDateOffset] = useState(0);
   const archiveDate = new Date(TODAY);
@@ -948,6 +961,7 @@ const DIARY_EMOTIONS = [
 ];
 
 function DiaryModal({ onClose }: { onClose: () => void }) {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = useDemoColors();
   const [emotion, setEmotion] = useState("");
   const [text, setText] = useState("");
   const [saved, setSaved] = useState(false);
@@ -1024,6 +1038,7 @@ function MobileDemoApp({ activeView, onViewChange, diaryOpen = false, onDiaryOpe
   diaryOpen?: boolean;
   onDiaryOpenChange?: (open: boolean) => void;
 }) {
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC, isDark } = useDemoColors();
   const [projects, setProjects] = useState(INIT_PROJECTS);
   const [activeId, setActiveId] = useState("p9");
   const [quest, setQuest] = useState("");
@@ -1057,7 +1072,7 @@ function MobileDemoApp({ activeView, onViewChange, diaryOpen = false, onDiaryOpe
   ];
 
   return (
-    <div className="artisans-demo dark" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', sans-serif" }}>
+    <div className={`artisans-demo ${isDark ? "dark" : ""}`} style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', sans-serif" }}>
       <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BH}`, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.55)", height: "min(640px, 82vh)", display: "flex", flexDirection: "column", position: "relative" }}>
 
         {/* Diary Modal */}
@@ -1182,6 +1197,9 @@ function MobileDemoApp({ activeView, onViewChange, diaryOpen = false, onDiaryOpe
 // ─── Root ─────────────────────────────────────────────────────────────────────
 export type { MobileView };
 export default function DemoApp({ mobileView, onMobileViewChange, diaryOpen, onDiaryOpenChange }: { mobileView?: MobileView; onMobileViewChange?: (v: MobileView) => void; diaryOpen?: boolean; onDiaryOpenChange?: (open: boolean) => void } = {}) {
+  const { resolvedTheme } = useTheme();
+  const demoColors: DemoColors = { ...(resolvedTheme === "light" ? LIGHT_COLORS : DARK_COLORS), isDark: resolvedTheme !== "light" };
+  const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = demoColors;
   const [projects, setProjects] = useState(INIT_PROJECTS);
   const [activeId, setActiveId] = useState("p9");
   const [activeView, setActiveView] = useState("day");
@@ -1200,8 +1218,9 @@ export default function DemoApp({ mobileView, onMobileViewChange, diaryOpen, onD
   };
 
   return (
+    <DemoColorsContext.Provider value={demoColors}>
     <>
-    <div className="artisans-demo dark hidden lg:block" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', sans-serif" }}>
+    <div className={`artisans-demo ${demoColors.isDark ? "dark" : ""} hidden lg:block`} style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', sans-serif" }}>
       <div style={{ background: BG, borderRadius: 10, border: `1px solid ${BH}`, overflow: "hidden", boxShadow: "0 24px 64px rgba(0,0,0,0.6)", maxWidth: 1100, margin: "0 auto", height: "min(720px, 88vh)", display: "flex", flexDirection: "column" }}>
 
         {/* Title bar */}
@@ -1281,5 +1300,6 @@ export default function DemoApp({ mobileView, onMobileViewChange, diaryOpen, onD
       />
     </div>
     </>
+    </DemoColorsContext.Provider>
   );
 }

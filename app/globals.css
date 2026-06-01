@@ -84,8 +84,24 @@ body {
   .text-balance { text-wrap: balance; }
 }
 
-/* ── Artisan's Compass demo dark theme (shadcn CSS vars) ── */
+/* ── Artisan's Compass demo theme (shadcn CSS vars) ── */
+/* light */
 .artisans-demo {
+  --background: 40 20% 97%;
+  --foreground: 25 15% 10%;
+  --card: 38 18% 93%;
+  --card-foreground: 25 15% 10%;
+  --primary: 30 90% 38%;
+  --primary-foreground: 40 20% 97%;
+  --muted: 38 12% 86%;
+  --muted-foreground: 30 10% 45%;
+  --border: 35 15% 80%;
+  --input: 35 15% 80%;
+  --accent: 30 90% 38%;
+  --accent-foreground: 40 20% 97%;
+}
+/* dark */
+.artisans-demo.dark {
   --background: 220 10% 7%;
   --foreground: 215 15% 87%;
   --card: 220 9% 12%;
