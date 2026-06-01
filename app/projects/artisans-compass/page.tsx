@@ -36,12 +36,11 @@ export default function ArtisansCompassPage() {
         <DemoSection />
       </section>
 
-      <hr className="border-[var(--border)]" />
-
-      {/* Archive modes */}
-      <section className="mx-auto max-w-2xl px-5 py-14">
-        <ScrollReveal>
-          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">데일리 아카이브 모드</p>
+      {/* Archive modes — surface bg */}
+      <div className="bg-[var(--surface)]">
+        <section className="mx-auto max-w-2xl px-5 py-14">
+          <ScrollReveal>
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">데일리 아카이브 모드</p>
           <p className="mb-8 text-[13px] leading-relaxed text-[var(--t4)]">
             하루가 끝나는 기준을 직접 정할 수 있어요. 자신의 생활 패턴에 맞는 모드를 선택하면 돼요.
           </p>
@@ -70,9 +69,8 @@ export default function ArtisansCompassPage() {
             </div>
           </ScrollReveal>
         </div>
-      </section>
-
-      <hr className="border-[var(--border)]" />
+        </section>
+      </div>
 
       {/* Other features */}
       <section className="mx-auto max-w-2xl px-5 py-14">
