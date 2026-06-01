@@ -79,14 +79,13 @@ export default function ArtisansCompassPage() {
         </ScrollReveal>
         <div className="grid gap-3 sm:grid-cols-2">
           {[
-            { icon: "⬛", label: "위젯 모드", desc: "바탕화면에 올려두고 쓰는 모드. 항상 위 고정, 위치·크기 잠금, 투명도 조절." },
-            { icon: "🎨", label: "테마", desc: "다크·라이트 기반 색상 팔레트. 위젯과 메인 화면에 각각 다른 테마 적용 가능." },
-            { icon: "📓", label: "일기", desc: "모바일 앱에서 버튼 하나로 일기 화면 즉시 실행. 감정 태그·사진 첨부 지원." },
-            { icon: "⚙️", label: "설정", desc: "타임라인 그리드 간격, 야간 구간 마커, 하단 바 탭 구성 등 세부 조정 가능." },
+            { label: "위젯 모드", desc: "바탕화면에 올려두고 쓰는 모드. 항상 위 고정, 위치·크기 잠금, 투명도 조절." },
+            { label: "테마", desc: "다크·라이트 기반 색상 팔레트. 위젯과 메인 화면에 각각 다른 테마 적용 가능." },
+            { label: "일기", desc: "모바일 앱에서 버튼 하나로 일기 화면 즉시 실행. 감정 태그·사진 첨부 지원." },
+            { label: "설정", desc: "타임라인 그리드 간격, 야간 구간 마커, 하단 바 탭 구성 등 세부 조정 가능." },
           ].map((f, i) => (
             <ScrollReveal key={f.label} delay={i * 80}>
               <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-5">
-                <p className="mb-3 text-xl">{f.icon}</p>
                 <p className="mb-1.5 text-[14px] font-semibold text-[var(--t1)]">{f.label}</p>
                 <p className="text-[13px] leading-relaxed text-[var(--t4)]">{f.desc}</p>
               </div>
