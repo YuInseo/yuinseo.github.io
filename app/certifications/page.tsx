@@ -12,8 +12,8 @@ const EDUCATION = [
     name: "시각디자인 (학사)",
     nameEn: "Visual Design, Bachelor's Degree",
     issuer: "국가평생교육진흥원",
-    tags: ["학점은행제", "시각디자인학과"],
-    desc: "학점은행제를 통해 시각디자인 전공을 이수 중.",
+    tags: ["학점은행제", "시각디자인학과", "2025.06 수료"],
+    desc: "학점은행제를 통해 시각디자인 전공을 이수했습니다.",
   },
 ];
 
