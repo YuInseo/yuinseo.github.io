@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Nav from "../../components/Nav";
 import DownloadButton from "./DownloadButton";
-import TimelineCard from "./TimelineCard";
 import DemoSection from "./DemoSection";
 
 export const metadata: Metadata = {
@@ -35,14 +34,6 @@ export default function ArtisansCompassPage() {
 
       <hr className="border-[var(--border)]" />
 
-      {/* Timeline */}
-      <section className="mx-auto max-w-2xl px-5 py-14">
-        <p className="mb-5 text-sm font-medium text-[var(--t2)]">타임테이블</p>
-        <TimelineCard />
-      </section>
-
-      <hr className="border-[var(--border)]" />
-
       {/* Archive modes */}
       <section className="mx-auto max-w-2xl px-5 py-14">
         <p className="mb-8 text-sm font-medium text-[var(--t2)]">데일리 아카이브 모드</p>
@@ -58,49 +49,6 @@ export default function ArtisansCompassPage() {
             <p className="text-sm leading-relaxed text-[var(--t3)]">
               앱을 닫기 전까지 당일로 기록해요. 새벽 작업자용.
             </p>
-          </div>
-        </div>
-      </section>
-
-      <hr className="border-[var(--border)]" />
-
-      {/* Calendar */}
-      <section className="mx-auto max-w-2xl px-5 py-14">
-        <p className="mb-5 text-sm font-medium text-[var(--t2)]">루틴 캘린더</p>
-        <div className="overflow-hidden rounded-lg border border-[var(--border-hi)] bg-[var(--surface)] p-4">
-          <div className="mb-3 flex flex-wrap items-center gap-1.5">
-            <span className="rounded bg-[var(--surface-up)] px-2 py-0.5 text-[11px] text-[var(--t3)]">
-              오늘: Feb 6
-            </span>
-            <span className="rounded bg-[var(--surface-up)] px-2 py-0.5 text-[11px] font-medium text-[var(--t2)]">
-              Project 9 · Feb 6
-            </span>
-          </div>
-          <div className="mb-2.5 flex items-center justify-between">
-            <span className="text-xs font-semibold text-[var(--t2)]">February 2026</span>
-            <div className="flex gap-2 text-[10px] text-[var(--t5)]">
-              <span>&lt;</span>
-              <span>&gt;</span>
-            </div>
-          </div>
-          <div className="grid grid-cols-7 text-center text-xs">
-            {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-              <div key={i} className="py-3 font-semibold text-[var(--t5)]">{d}</div>
-            ))}
-            {[...Array(5)].map((_, i) => <div key={i} className="py-3" />)}
-            {Array.from({ length: 28 }, (_, i) => i + 1).map((day) => (
-              <div
-                key={day}
-                className={`py-3 ${day === 6 ? "rounded font-bold" : "text-[var(--t4)]"}`}
-                style={
-                  day === 6
-                    ? { backgroundColor: "var(--t1)", color: "var(--bg)", borderRadius: "4px" }
-                    : undefined
-                }
-              >
-                {day}
-              </div>
-            ))}
           </div>
         </div>
       </section>
