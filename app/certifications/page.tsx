@@ -7,7 +7,17 @@ export const metadata: Metadata = {
   description: "보유 자격증 목록",
 };
 
-const CERTS = [
+const LANGUAGE = [
+  {
+    name: "TOEIC",
+    nameEn: "Test of English for International Communication",
+    issuer: "ETS",
+    tags: ["800점"],
+    desc: "국제적으로 통용되는 영어 실무 능력 평가 시험.",
+  },
+];
+
+const TECHNICAL = [
   {
     name: "정보처리기사",
     nameEn: "Engineer Information Processing",
@@ -31,47 +41,66 @@ const CERTS = [
   },
 ];
 
+function CertList({ certs, startDelay = 0 }: { certs: typeof LANGUAGE; startDelay?: number }) {
+  return (
+    <div className="space-y-4">
+      {certs.map((cert, i) => (
+        <ScrollReveal key={cert.name} delay={startDelay + i * 80}>
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5">
+            <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+              <div>
+                <p className="text-[16px] font-semibold text-[var(--t1)]">{cert.name}</p>
+                <p className="mt-0.5 text-[11px] text-[var(--t4)]">{cert.nameEn}</p>
+              </div>
+              <span className="shrink-0 text-[12px] text-[var(--t4)]">{cert.issuer}</span>
+            </div>
+            <p className="mb-3 text-[13px] leading-relaxed text-[var(--t3)]">{cert.desc}</p>
+            {cert.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {cert.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-[var(--border-hi)] px-2.5 py-0.5 text-[11px] text-[var(--t4)]"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </ScrollReveal>
+      ))}
+    </div>
+  );
+}
+
 export default function CertificationsPage() {
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--t1)]">
       <Nav />
 
-      <section className="mx-auto max-w-2xl px-5 pb-14 pt-20">
+      <section className="mx-auto max-w-2xl px-5 pb-20 pt-20">
         <ScrollReveal>
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
             certifications
           </p>
-          <h1 className="mb-2 text-3xl font-bold tracking-tight">자격증</h1>
-          <p className="mb-14 text-[14px] text-[var(--t4)]">보유 자격증 {CERTS.length}개</p>
+          <h1 className="mb-14 text-3xl font-bold tracking-tight">자격증</h1>
         </ScrollReveal>
 
-        <div className="space-y-5">
-          {CERTS.map((cert, i) => (
-            <ScrollReveal key={cert.name} delay={i * 80}>
-              <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5">
-                <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
-                  <div>
-                    <p className="text-[16px] font-semibold text-[var(--t1)]">{cert.name}</p>
-                    <p className="mt-0.5 text-[11px] text-[var(--t4)]">{cert.nameEn}</p>
-                  </div>
-                  <span className="shrink-0 text-[12px] text-[var(--t4)]">{cert.issuer}</span>
-                </div>
-                <p className="mb-3 text-[13px] leading-relaxed text-[var(--t3)]">{cert.desc}</p>
-                {cert.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {cert.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full border border-[var(--border-hi)] px-2.5 py-0.5 text-[11px] text-[var(--t4)]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
+        <div className="space-y-14">
+          <div>
+            <ScrollReveal>
+              <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">어학능력</p>
             </ScrollReveal>
-          ))}
+            <CertList certs={LANGUAGE} startDelay={80} />
+          </div>
+
+          <div>
+            <ScrollReveal>
+              <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">기술</p>
+            </ScrollReveal>
+            <CertList certs={TECHNICAL} startDelay={80} />
+          </div>
         </div>
       </section>
 
