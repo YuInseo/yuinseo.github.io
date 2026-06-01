@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Nav from "../../components/Nav";
+import Footer from "../../components/Footer";
 import { POSTS, getPost } from "../posts";
 
 export function generateStaticParams() {
@@ -63,9 +64,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </div>
       </article>
 
-      <footer className="border-t border-[var(--border)] px-5 py-8 text-center text-xs text-[var(--t5)]">
-        © 2025 yuinseo
-      </footer>
+      <Footer />
     </div>
   );
 }

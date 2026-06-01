@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Nav from "../components/Nav";
 import ScrollReveal from "../components/ScrollReveal";
+import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
   title: "학력 & 자격증",
@@ -123,9 +124,7 @@ export default function CertificationsPage() {
         </div>
       </section>
 
-      <footer className="border-t border-[var(--border)] px-5 py-8 text-center text-xs text-[var(--t5)]">
-        © 2025 yuinseo
-      </footer>
+      <Footer />
     </div>
   );
 }

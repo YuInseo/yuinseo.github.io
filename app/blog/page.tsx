@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "../components/Nav";
+import Footer from "../components/Footer";
 import { POSTS, CATEGORIES } from "./posts";
 
 export const metadata: Metadata = {
@@ -56,9 +57,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      <footer className="border-t border-[var(--border)] px-5 py-8 text-center text-xs text-[var(--t5)]">
-        © 2025 yuinseo
-      </footer>
+      <Footer />
     </div>
   );
 }

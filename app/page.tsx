@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Nav from "./components/Nav";
 import ScrollReveal from "./components/ScrollReveal";
+import Footer from "./components/Footer";
 
 export default function Home() {
   return (
@@ -97,10 +98,7 @@ export default function Home() {
 
       </main>
 
-      <footer className="px-5 pb-10 text-xs text-[var(--t5)]">
-        <p>© 2025 yuinseo</p>
-        <a href="mailto:inseo0121@gmail.com" className="mt-1 block transition-colors hover:text-[var(--t3)]">inseo0121@gmail.com</a>
-      </footer>
+      <Footer />
     </div>
   );
 }

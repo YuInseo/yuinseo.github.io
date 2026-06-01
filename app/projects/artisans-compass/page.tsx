@@ -3,6 +3,7 @@ import Nav from "../../components/Nav";
 import DownloadButton from "./DownloadButton";
 import DemoSection from "./DemoSection";
 import ScrollReveal from "../../components/ScrollReveal";
+import Footer from "../../components/Footer";
 
 export const metadata: Metadata = {
   title: "Artisan's Compass",
@@ -109,9 +110,7 @@ export default function ArtisansCompassPage() {
         </div>
       </section>
 
-      <footer className="border-t border-[var(--border)] px-5 py-8 text-center text-xs text-[var(--t5)]">
-        Artisan&apos;s Compass
-      </footer>
+      <Footer />
     </div>
   );
 }
