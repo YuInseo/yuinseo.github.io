@@ -6,8 +6,24 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "yuinseo",
-  description: "개발자이자 메이커",
+  metadataBase: new URL("https://yuinseo.github.io"),
+  title: {
+    default: "yuinseo",
+    template: "%s | yuinseo",
+  },
+  description: "생활의 불편함을 줄여주는 앱을 만드는 indie developer.",
+  openGraph: {
+    siteName: "yuinseo",
+    locale: "ko_KR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
