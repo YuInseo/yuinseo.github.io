@@ -1032,11 +1032,12 @@ function DiaryModal({ onClose }: { onClose: () => void }) {
 // ─── Mobile Demo App ──────────────────────────────────────────────────────────
 type MobileView = "day" | "calendar" | "pomodoro" | "stats" | "settings";
 
-function MobileDemoApp({ activeView, onViewChange, diaryOpen = false, onDiaryOpenChange }: {
+function MobileDemoApp({ activeView, onViewChange, diaryOpen = false, onDiaryOpenChange, embedded = false }: {
   activeView: MobileView;
   onViewChange: (v: MobileView) => void;
   diaryOpen?: boolean;
   onDiaryOpenChange?: (open: boolean) => void;
+  embedded?: boolean;
 }) {
   const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC, isDark } = useDemoColors();
   const [projects, setProjects] = useState(INIT_PROJECTS);
@@ -1073,7 +1074,7 @@ function MobileDemoApp({ activeView, onViewChange, diaryOpen = false, onDiaryOpe
 
   return (
     <div className={`artisans-demo ${isDark ? "dark" : ""}`} style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', sans-serif" }}>
-      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BH}`, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.55)", height: "min(640px, 82vh)", display: "flex", flexDirection: "column", position: "relative" }}>
+      <div style={{ background: BG, borderRadius: embedded ? 0 : 12, border: embedded ? "none" : `1px solid ${BH}`, overflow: "hidden", boxShadow: embedded ? "none" : "0 8px 32px rgba(0,0,0,0.55)", height: "min(640px, 82vh)", display: "flex", flexDirection: "column", position: "relative" }}>
 
         {/* Diary Modal */}
         {diaryOpen && <DiaryModal onClose={() => onDiaryOpenChange?.(false)} />}
@@ -1196,7 +1197,7 @@ function MobileDemoApp({ activeView, onViewChange, diaryOpen = false, onDiaryOpe
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 export type { MobileView };
-export default function DemoApp({ mobileView, onMobileViewChange, diaryOpen, onDiaryOpenChange }: { mobileView?: MobileView; onMobileViewChange?: (v: MobileView) => void; diaryOpen?: boolean; onDiaryOpenChange?: (open: boolean) => void } = {}) {
+export default function DemoApp({ mobileView, onMobileViewChange, diaryOpen, onDiaryOpenChange, embedded }: { mobileView?: MobileView; onMobileViewChange?: (v: MobileView) => void; diaryOpen?: boolean; onDiaryOpenChange?: (open: boolean) => void; embedded?: boolean } = {}) {
   const { resolvedTheme } = useTheme();
   const demoColors: DemoColors = { ...(resolvedTheme === "light" ? LIGHT_COLORS : DARK_COLORS), isDark: resolvedTheme !== "light" };
   const { BG, S, SU, B, BH, T1, T2, T3, T4, T5, ACC } = demoColors;
@@ -1297,6 +1298,7 @@ export default function DemoApp({ mobileView, onMobileViewChange, diaryOpen, onD
         onViewChange={onMobileViewChange ?? (() => {})}
         diaryOpen={diaryOpen}
         onDiaryOpenChange={onDiaryOpenChange}
+        embedded={embedded}
       />
     </div>
     </>

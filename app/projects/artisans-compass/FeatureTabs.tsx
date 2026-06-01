@@ -71,13 +71,14 @@ const FEATURES: Record<string, { title: string; desc: string; points: string[] }
 
 interface Props {
   activeId?: string;
+  borderless?: boolean;
 }
 
-export default function FeatureTabs({ activeId = "day" }: Props) {
+export default function FeatureTabs({ activeId = "day", borderless = false }: Props) {
   const feature = FEATURES[activeId] ?? FEATURES.day;
 
   return (
-    <div className="mt-8 pt-6 border-t border-[var(--border)]">
+    <div className={borderless ? "" : "mt-8 pt-6 border-t border-[var(--border)]"}>
       <p className="mb-2 text-[13px] font-semibold text-[var(--t1)]">{feature.title}</p>
       <p className="mb-4 text-[13px] leading-relaxed text-[var(--t3)]">{feature.desc}</p>
       <ul className="space-y-2.5">
