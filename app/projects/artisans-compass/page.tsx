@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Nav from "../../components/Nav";
 import DownloadButton from "./DownloadButton";
 import TimelineCard from "./TimelineCard";
 import MainScreenMock from "./MainScreenMock";
+import DemoApp from "./demo/DemoApp";
 
 export const metadata: Metadata = {
   title: "Artisan's Compass",
@@ -24,12 +24,14 @@ export default function ArtisansCompassPage() {
           하루를 기록하는 Windows 앱이에요.
         </p>
         <DownloadButton />
-        <Link
-          href="/projects/artisans-compass/demo"
-          className="mt-4 inline-flex items-center gap-2 text-sm text-[var(--accent)] underline-offset-4 hover:underline"
-        >
-          ↗ 라이브 데모 체험하기
-        </Link>
+      </section>
+
+      <hr className="border-[var(--border)]" />
+
+      {/* Live demo */}
+      <section className="mx-auto max-w-5xl px-5 py-14">
+        <p className="mb-5 text-sm font-medium text-[var(--t2)]">라이브 데모</p>
+        <DemoApp />
       </section>
 
       <hr className="border-[var(--border)]" />
