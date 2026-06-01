@@ -79,7 +79,7 @@ export default function ArtisansCompassPage() {
         <ScrollReveal>
           <p className="mb-8 text-sm font-medium text-[var(--t2)]">기타 기능</p>
         </ScrollReveal>
-        <div className="grid gap-10 sm:grid-cols-3">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <ScrollReveal delay={0}>
             <div>
               <p className="mb-2 text-sm font-medium text-[var(--t2)]">위젯 모드</p>
@@ -94,7 +94,7 @@ export default function ArtisansCompassPage() {
               </ul>
             </div>
           </ScrollReveal>
-          <ScrollReveal delay={120}>
+          <ScrollReveal delay={100}>
             <div>
               <p className="mb-2 text-sm font-medium text-[var(--t2)]">테마</p>
               <p className="mb-3 text-[13px] leading-relaxed text-[var(--t4)]">여러 색상 테마. 위젯과 메인 화면에 각각 적용 가능.</p>
@@ -108,12 +108,26 @@ export default function ArtisansCompassPage() {
               </ul>
             </div>
           </ScrollReveal>
-          <ScrollReveal delay={240}>
+          <ScrollReveal delay={200}>
+            <div>
+              <p className="mb-2 text-sm font-medium text-[var(--t2)]">일기</p>
+              <p className="mb-3 text-[13px] leading-relaxed text-[var(--t4)]">모바일 앱에서 버튼 하나로 오늘의 기록을 남겨요.</p>
+              <ul className="space-y-1.5">
+                {["버튼 한 번으로 일기 화면 즉시 실행", "오늘 날짜 제목 자동 입력", "감정 이모지 태그", "사진 최대 4장 첨부", "해당 날짜 아카이브에 연결"].map(p => (
+                  <li key={p} className="flex items-start gap-2 text-[12px] text-[var(--t4)]">
+                    <span className="mt-[5px] h-1 w-1 shrink-0 rounded-full bg-[var(--border-hi)]" />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={300}>
             <div>
               <p className="mb-2 text-sm font-medium text-[var(--t2)]">설정</p>
               <p className="mb-3 text-[13px] leading-relaxed text-[var(--t4)]">타임테이블 카테고리, 작업 외 앱, 아카이브 모드 등.</p>
               <ul className="space-y-1.5">
-                {["자동 추적 앱 목록 관리", "타임테이블 그리드 간격 설정", "야간 시간 구간 마커", "알림 및 내보내기 (예정)"].map(p => (
+                {["자동 추적 앱 목록 관리", "타임테이블 그리드 간격 설정", "야간 시간 구간 마커", "하단 바 탭 구성", "알림 및 내보내기 (예정)"].map(p => (
                   <li key={p} className="flex items-start gap-2 text-[12px] text-[var(--t4)]">
                     <span className="mt-[5px] h-1 w-1 shrink-0 rounded-full bg-[var(--border-hi)]" />
                     {p}
