@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Nav from "../../components/Nav";
 import DownloadButton from "./DownloadButton";
 import DemoSection from "./DemoSection";
-import ScrollReveal from "./ScrollReveal";
+import ScrollReveal from "../../components/ScrollReveal";
 
 export const metadata: Metadata = {
   title: "Artisan's Compass",
