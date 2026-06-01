@@ -11,6 +11,30 @@ export const CATEGORIES = ["Artisan's Compass", "포트폴리오"];
 
 export const POSTS: Post[] = [
   {
+    slug: "fouc-nextjs-dark-theme",
+    title: "Next.js 정적 사이트에서 다크 테마 깜빡임 잡기",
+    date: "2026-06-01",
+    category: "포트폴리오",
+    summary: "포트폴리오 사이트에서 첫 로드 시 스타일이 깨지고 새로고침해야 정상이 되는 현상을 수정했다. JS 하이드레이션 전 CSS 기본값 문제였다.",
+    body: [
+      {
+        text: "사이트를 처음 열면 Nav 링크가 파란색으로 보이고, 데모 앱의 모바일·데스크톱 레이아웃이 동시에 나타났다. 새로고침하면 정상으로 돌아왔다.",
+      },
+      {
+        heading: "원인",
+        text: "next-themes는 클라이언트 측 JavaScript가 실행된 후에야 <html>에 .dark 클래스를 붙인다. 그 전 찰나에 브라우저는 :root(라이트 테마) 기준으로 렌더링한다. Tailwind의 hidden lg:block 같은 반응형 클래스도 CSS가 완전히 로드되기 전엔 무효라, 숨겨야 할 요소가 함께 보였다.",
+      },
+      {
+        heading: "해결 방법",
+        text: ":root와 .dark에 동일하게 다크 테마 변수를 선언하고, 라이트 테마는 .light 클래스로 분리했다. 이렇게 하면 JS가 실행되기 전 기본 상태에서도 다크 변수가 적용된다. 추가로 a { color: inherit; text-decoration: none; }를 globals.css에 넣어 Tailwind preflight 로드 전 링크 기본 스타일을 방지했다.",
+      },
+      {
+        heading: "추가 설정",
+        text: "ThemeProvider에 enableSystem={false}를 추가해 시스템 테마 감지를 비활성화했다. OS 다크 모드를 따라가다 상태가 불일치하는 케이스를 줄이는 게 목적이다.",
+      },
+    ],
+  },
+  {
     slug: "timetable-auto-tracking",
     title: "앱 전환 이력을 자동으로 감지하는 방법",
     date: "2025-06-01",
