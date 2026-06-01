@@ -16,9 +16,9 @@ export default function Home() {
             </p>
             <h1 className="mb-5 text-3xl font-bold tracking-tight">유인서</h1>
             <p className="text-[15px] leading-[1.8] text-[var(--t3)]">
-              불편한 게 있으면 직접 만드는 타입이에요.
+              불편한 게 있으면 직접 만드는 편이라서,
               <br />
-              지금은 하루를 기록하는 Windows 앱을 만들고 있어요.
+              지금은 하루를 기록하는 Windows 앱을 만드는 중이고요.
             </p>
           </ScrollReveal>
         </section>
@@ -42,7 +42,7 @@ export default function Home() {
                 </span>
               </div>
               <p className="text-[13px] leading-relaxed text-[var(--t4)]">
-                하루를 기록하는 생산성 앱. 앱 사용 이력이 자동으로 타임테이블에 쌓이고, 프로젝트·할일·포모도로가 하나의 흐름으로 연결돼요.
+                하루를 기록하는 생산성 앱. 앱 사용 이력이 타임테이블에 자동으로 쌓이고, 프로젝트·할일·포모도로가 한 흐름으로 연결되는 구조.
               </p>
             </Link>
           </ScrollReveal>
@@ -54,7 +54,7 @@ export default function Home() {
             <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">블로그</p>
           </ScrollReveal>
           <ScrollReveal delay={120}>
-            <p className="text-[14px] text-[var(--t4)]">글은 아직 없어요.</p>
+            <p className="text-[14px] text-[var(--t4)]">아직 없어요.</p>
           </ScrollReveal>
         </section>
 

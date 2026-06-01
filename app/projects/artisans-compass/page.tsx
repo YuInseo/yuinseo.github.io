@@ -20,10 +20,10 @@ export default function ArtisansCompassPage() {
           Artisan&apos;s Compass
         </h1>
         <p className="mb-3 text-[15px] leading-relaxed text-[var(--t3)]">
-          하루를 기록하는 Windows 앱이에요.
+          하루를 기록하는 Windows 앱.
         </p>
         <p className="mb-10 text-[14px] leading-relaxed text-[var(--t4)]">
-          앱 사용 이력이 자동으로 타임테이블에 수집되고, 프로젝트·할일·포모도로·아카이브가 하나의 흐름으로 연결돼요. 매일 밤 하루를 닫으면 그날의 기록이 영구 보관돼요.
+          앱 사용 이력이 타임테이블에 자동으로 쌓이고, 프로젝트·할일·포모도로·아카이브가 한 흐름으로 연결됩니다. 하루를 닫으면 그날 기록이 영구 보관되고요.
         </p>
         <DownloadButton />
       </section>
@@ -42,7 +42,7 @@ export default function ArtisansCompassPage() {
           <ScrollReveal>
             <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">데일리 아카이브 모드</p>
           <p className="mb-8 text-[13px] leading-relaxed text-[var(--t4)]">
-            하루가 끝나는 기준을 직접 정할 수 있어요. 자신의 생활 패턴에 맞는 모드를 선택하면 돼요.
+            하루가 끝나는 기준을 직접 정할 수 있어요. 생활 패턴에 맞는 걸 고르면 됩니다.
           </p>
         </ScrollReveal>
         <div className="grid gap-8 sm:grid-cols-2">
@@ -50,10 +50,10 @@ export default function ArtisansCompassPage() {
             <div className="border-l-2 pl-5" style={{ borderColor: "var(--archive-1)" }}>
               <p className="mb-1.5 text-sm font-semibold text-[var(--t1)]">고정 모드</p>
               <p className="mb-3 text-[13px] leading-relaxed text-[var(--t3)]">
-                자정 00:00 정각에 다음 날로 넘어가요.
+                자정 00:00 정각에 다음 날로 전환.
               </p>
               <p className="text-[12px] leading-relaxed text-[var(--t4)]">
-                규칙적인 수면 패턴을 가진 분들께 적합해요. 날짜가 바뀌는 순간 오늘의 기록이 자동으로 마감되고, 새 하루가 시작돼요.
+                규칙적인 생활 패턴이라면 이쪽이 편하죠. 날짜가 바뀌는 순간 기록이 자동 마감되고 새 하루가 열립니다.
               </p>
             </div>
           </ScrollReveal>
@@ -61,10 +61,10 @@ export default function ArtisansCompassPage() {
             <div className="border-l-2 pl-5" style={{ borderColor: "var(--archive-2)" }}>
               <p className="mb-1.5 text-sm font-semibold text-[var(--t1)]">동적 모드</p>
               <p className="mb-3 text-[13px] leading-relaxed text-[var(--t3)]">
-                앱을 닫기 전까지 당일로 기록해요. 새벽 작업자용.
+                앱을 닫기 전까지 당일로 기록. 새벽 작업자용.
               </p>
               <p className="text-[12px] leading-relaxed text-[var(--t4)]">
-                밤새 작업하는 분들을 위한 모드예요. 앱을 닫는 순간이 하루의 끝이에요. 새벽 3시에 닫아도 전날 날짜로 기록이 마감돼요.
+                밤새 작업하는 분들을 위한 모드. 앱을 닫는 순간이 하루의 끝이고, 새벽 3시에 닫아도 전날 날짜로 마감됩니다.
               </p>
             </div>
           </ScrollReveal>
@@ -109,7 +109,7 @@ export default function ArtisansCompassPage() {
           <ScrollReveal delay={200}>
             <div>
               <p className="mb-2 text-[14px] font-semibold text-[var(--t1)]">일기</p>
-              <p className="mb-3 text-[13px] leading-relaxed text-[var(--t4)]">모바일 앱에서 버튼 하나로 오늘의 기록을 남겨요.</p>
+              <p className="mb-3 text-[13px] leading-relaxed text-[var(--t4)]">모바일에서 버튼 하나로 기록.</p>
               <ul className="space-y-1.5">
                 {["버튼 한 번으로 일기 화면 즉시 실행", "오늘 날짜 제목 자동 입력", "감정 이모지 태그", "사진 최대 4장 첨부", "해당 날짜 아카이브에 연결"].map(p => (
                   <li key={p} className="flex items-start gap-2 text-[12px] text-[var(--t4)]">
