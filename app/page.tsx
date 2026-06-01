@@ -16,9 +16,7 @@ export default function Home() {
             </p>
             <h1 className="mb-5 text-3xl font-bold tracking-tight">유인서</h1>
             <p className="text-[15px] leading-[1.8] text-[var(--t3)]">
-              불편한 게 있으면 직접 만드는 편이라서,
-              <br />
-              지금은 하루를 기록하는 Windows 앱을 만드는 중이고요.
+              생활의 불편함을 줄여주는 앱을 만들고 있습니다.
             </p>
           </ScrollReveal>
         </section>
