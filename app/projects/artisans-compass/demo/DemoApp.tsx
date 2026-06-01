@@ -944,6 +944,12 @@ function MobileDemoApp({ activeView, onViewChange }: { activeView: MobileView; o
   const [showInput, setShowInput] = useState(false);
   const [inputVal, setInputVal] = useState("");
 
+  const TAB_ORDER: MobileView[] = ["day", "calendar", "pomodoro", "stats", "settings"];
+  const prevView = useRef(activeView);
+  const slideClass = TAB_ORDER.indexOf(activeView) >= TAB_ORDER.indexOf(prevView.current)
+    ? "demo-slide-right" : "demo-slide-left";
+  useEffect(() => { prevView.current = activeView; }, [activeView]);
+
   const activeProject = projects.find(p => p.id === activeId) ?? projects[0];
   const todos = activeProject.todos;
   const done = todos.filter(t => t.done).length;
@@ -973,7 +979,7 @@ function MobileDemoApp({ activeView, onViewChange }: { activeView: MobileView; o
         </div>
 
         {/* Content */}
-        <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column", minHeight: 0 }}>
+        <div key={activeView} className={slideClass} style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column", minHeight: 0 }}>
 
           {activeView === "day" && (
             <>
