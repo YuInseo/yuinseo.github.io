@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Nav from "../../components/Nav";
 import DownloadButton from "./DownloadButton";
 import TimelineCard from "./TimelineCard";
-import MainScreenMock from "./MainScreenMock";
 import DemoApp from "./demo/DemoApp";
 
 export const metadata: Metadata = {
@@ -32,14 +31,6 @@ export default function ArtisansCompassPage() {
       <section className="mx-auto max-w-5xl px-5 py-14">
         <p className="mb-5 text-sm font-medium text-[var(--t2)]">라이브 데모</p>
         <DemoApp />
-      </section>
-
-      <hr className="border-[var(--border)]" />
-
-      {/* Main screen mock */}
-      <section className="mx-auto max-w-5xl px-5 py-14">
-        <p className="mb-5 text-sm font-medium text-[var(--t2)]">메인 화면</p>
-        <MainScreenMock />
       </section>
 
       <hr className="border-[var(--border)]" />
