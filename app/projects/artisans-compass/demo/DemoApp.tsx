@@ -721,6 +721,247 @@ function SettingsView({ settings, onUpdate }: { settings: AppSettings; onUpdate:
   );
 }
 
+// ─── Mobile Pomodoro ─────────────────────────────────────────────────────────
+function MobilePomodoroView() {
+  const [running, setRunning] = useState(false);
+  const [secs, setSecs] = useState(25 * 60);
+  const [count, setCount] = useState(0);
+  const totalSecs = 25 * 60;
+
+  useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => {
+      setSecs(s => {
+        if (s <= 1) { setRunning(false); setCount(c => c + 1); return totalSecs; }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [running]);
+
+  const mins = Math.floor(secs / 60);
+  const sec = secs % 60;
+  const progress = (totalSecs - secs) / totalSecs;
+  const R = 80;
+  const circ = 2 * Math.PI * R;
+
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 24, padding: "20px" }}>
+      <div style={{ position: "relative", width: 200, height: 200 }}>
+        <svg width="200" height="200" style={{ transform: "rotate(-90deg)" }}>
+          <circle cx="100" cy="100" r={R} fill="none" stroke={SU} strokeWidth="8" />
+          <circle cx="100" cy="100" r={R} fill="none" stroke={ACC} strokeWidth="8"
+            strokeDasharray={circ} strokeDashoffset={circ * (1 - progress)}
+            strokeLinecap="round" style={{ transition: "stroke-dashoffset 1s linear" }} />
+        </svg>
+        <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2 }}>
+          <span style={{ fontSize: 40, fontWeight: 700, color: T1, fontVariantNumeric: "tabular-nums", fontFamily: "monospace", letterSpacing: 2 }}>
+            {String(mins).padStart(2, "0")}:{String(sec).padStart(2, "0")}
+          </span>
+          <span style={{ fontSize: 11, color: T4 }}>{count > 0 ? `${count}번 완료` : "포모도로"}</span>
+        </div>
+      </div>
+      <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+        <button onClick={() => { setRunning(false); setSecs(totalSecs); }}
+          style={{ width: 44, height: 44, borderRadius: "50%", background: SU, border: `1px solid ${BH}`, color: T3, cursor: "pointer", fontSize: 18 }}>↺</button>
+        <button onClick={() => setRunning(r => !r)}
+          style={{ width: 60, height: 60, borderRadius: "50%", background: ACC, border: "none", color: BG, cursor: "pointer", fontSize: 22, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {running ? "⏸" : "▶"}
+        </button>
+        <button onClick={() => { setRunning(false); setSecs(5 * 60); }}
+          style={{ width: 44, height: 44, borderRadius: "50%", background: SU, border: `1px solid ${BH}`, color: T3, cursor: "pointer", fontSize: 12, fontWeight: 600 }}>5m</button>
+      </div>
+      {count > 0 && (
+        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" as const, justifyContent: "center" }}>
+          {Array.from({ length: count }, (_, i) => <span key={i} style={{ fontSize: 22 }}>🍅</span>)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Mobile Archive ───────────────────────────────────────────────────────────
+function MobileArchiveView() {
+  const [settings] = useState<AppSettings>(MOCK_SETTINGS);
+  const [dateOffset, setDateOffset] = useState(0);
+  const archiveDate = new Date(TODAY);
+  archiveDate.setDate(TODAY.getDate() + dateOffset);
+  const dateStr = archiveDate.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+  const isToday = dateOffset === 0;
+  const archiveSessions = isToday ? MOCK_SESSIONS : [];
+  const totalFocusMins = isToday ? 390 : 0;
+  const th = Math.floor(totalFocusMins / 60);
+  const tm = totalFocusMins % 60;
+
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div style={{ borderBottom: `1px solid ${B}`, padding: "8px 14px", display: "flex", alignItems: "center", flexShrink: 0, background: S }}>
+        <button onClick={() => setDateOffset(o => o - 1)}
+          style={{ background: "transparent", border: "none", color: T3, fontSize: 20, cursor: "pointer", padding: "0 8px" }}>←</button>
+        <span style={{ flex: 1, textAlign: "center" as const, fontSize: 14, fontWeight: 600, color: T1 }}>{dateStr}</span>
+        <button onClick={() => setDateOffset(o => Math.min(0, o + 1))}
+          style={{ background: "transparent", border: "none", color: dateOffset === 0 ? T5 : T3, fontSize: 20, cursor: "pointer", padding: "0 8px" }}>→</button>
+      </div>
+      <div style={{ padding: "12px 16px", borderBottom: `1px solid ${B}`, display: "flex", gap: 24, flexShrink: 0, background: S }}>
+        {[
+          { label: "총 집중", val: `${th}h ${tm}m` },
+          { label: "세션", val: `${archiveSessions.length}` },
+          { label: "주요 활동", val: isToday ? "오전" : "—" },
+        ].map(item => (
+          <div key={item.label}>
+            <p style={{ fontSize: 9, color: T4, margin: "0 0 2px", textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>{item.label}</p>
+            <p style={{ fontSize: 20, fontWeight: 700, color: T1, margin: 0 }}>{item.val}</p>
+          </div>
+        ))}
+      </div>
+      <div style={{ flex: 1, overflow: "hidden" }}>
+        <TimeTableGraph
+          sessions={archiveSessions}
+          date={archiveDate}
+          projects={TIMETABLE_PROJECTS}
+          settings={settings}
+          onUpdateSettings={() => {}}
+          renderMode="fixed"
+          nightTimeStart={24}
+        />
+      </div>
+    </div>
+  );
+}
+
+// ─── Mobile Demo App ──────────────────────────────────────────────────────────
+function MobileDemoApp() {
+  const [projects, setProjects] = useState(INIT_PROJECTS);
+  const [activeId, setActiveId] = useState("p9");
+  const [activeView, setActiveView] = useState<"day" | "calendar" | "pomodoro" | "stats" | "settings">("day");
+  const [quest, setQuest] = useState("");
+  const [dayEnded, setDayEnded] = useState(false);
+  const [settings, setSettings] = useState<AppSettings>(MOCK_SETTINGS);
+  const [showInput, setShowInput] = useState(false);
+  const [inputVal, setInputVal] = useState("");
+
+  const activeProject = projects.find(p => p.id === activeId) ?? projects[0];
+  const todos = activeProject.todos;
+  const done = todos.filter(t => t.done).length;
+  const pct = todos.length ? (done / todos.length) * 100 : 0;
+
+  const toggleTodo = (id: string) =>
+    setProjects(prev => prev.map(p =>
+      p.id !== activeId ? p : { ...p, todos: p.todos.map(t => t.id === id ? { ...t, done: !t.done } : t) }
+    ));
+
+  const NAV = [
+    { id: "day" as const,      icon: <GridIcon />,   label: "오늘" },
+    { id: "calendar" as const, icon: <CalIcon />,    label: "캘린더" },
+    { id: "pomodoro" as const, icon: <TargetIcon />, label: "포모도로" },
+    { id: "stats" as const,    icon: <BarIcon />,    label: "아카이브" },
+    { id: "settings" as const, icon: <GearIcon />,   label: "설정" },
+  ];
+
+  return (
+    <div className="artisans-demo dark" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', sans-serif" }}>
+      <div style={{ background: BG, borderRadius: 12, border: `1px solid ${BH}`, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.55)", height: "min(640px, 82vh)", display: "flex", flexDirection: "column" }}>
+
+        {/* Header */}
+        <div style={{ background: S, borderBottom: `1px solid ${B}`, padding: "10px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: T2, letterSpacing: "0.1em" }}>ARTISAN&apos;S COMPASS</span>
+          <span style={{ fontSize: 11, color: T4 }}>{TODAY_STR}</span>
+        </div>
+
+        {/* Content */}
+        <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column", minHeight: 0 }}>
+
+          {activeView === "day" && (
+            <>
+              {/* Project pills */}
+              <div style={{ padding: "8px 12px", borderBottom: `1px solid ${B}`, flexShrink: 0, overflowX: "auto", display: "flex", gap: 6, scrollbarWidth: "none" as const }}>
+                {INIT_PROJECTS.map(p => (
+                  <button key={p.id} onClick={() => setActiveId(p.id)}
+                    style={{ flexShrink: 0, padding: "5px 12px", borderRadius: 20, border: `1px solid ${activeId === p.id ? p.color + "66" : B}`, background: activeId === p.id ? p.color + "22" : "transparent", color: activeId === p.id ? p.color : T4, fontSize: 11, fontWeight: 600, cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap" as const }}>
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+              {/* Progress */}
+              <div style={{ height: 2, background: SU, flexShrink: 0 }}>
+                <div style={{ height: "100%", width: `${pct}%`, background: activeProject.color, transition: "width 0.3s" }} />
+              </div>
+              {/* Todo list */}
+              <div style={{ flex: 1, overflowY: "auto", padding: "6px 8px 0" }}>
+                {todos.map(todo => (
+                  <button key={todo.id} onClick={() => toggleTodo(todo.id)}
+                    style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", paddingLeft: `${todo.depth * 18 + 10}px`, paddingRight: 12, paddingTop: 9, paddingBottom: 9, borderRadius: 8, background: "transparent", border: "none", cursor: "pointer", textAlign: "left" as const, transition: "background 0.1s" }}
+                    onMouseEnter={e => (e.currentTarget.style.background = SU)}
+                    onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+                    <span style={{ width: 10, fontSize: 9, color: T5, flexShrink: 0 }}>{todo.hasChildren ? "▾" : ""}</span>
+                    <span style={{ width: 16, height: 16, borderRadius: 4, flexShrink: 0, border: todo.done ? "none" : `1.5px solid ${BH}`, background: todo.done ? activeProject.color : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: "#fff", transition: "all 0.15s" }}>{todo.done ? "✓" : ""}</span>
+                    <span style={{ fontSize: todo.depth === 0 ? 13 : 12, fontWeight: todo.depth === 0 ? 500 : 400, color: todo.done ? T4 : (todo.depth === 0 ? T1 : T2), textDecoration: todo.done ? "line-through" : "none", transition: "all 0.15s" }}>{todo.text}</span>
+                  </button>
+                ))}
+              </div>
+              {/* Quest */}
+              <div style={{ borderTop: `1px solid ${B}`, padding: "10px 14px", flexShrink: 0 }}>
+                {quest ? (
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 14px", borderRadius: 20, background: `${ACC}15`, border: `1px solid ${ACC}30` }}>
+                    <span style={{ fontSize: 13 }}>🎯</span>
+                    <span style={{ fontSize: 12, color: T2, flex: 1 }}>{quest}</span>
+                    <button onClick={() => setQuest("")} style={{ background: "none", border: "none", cursor: "pointer", color: T4, fontSize: 16, padding: 0 }}>×</button>
+                  </div>
+                ) : showInput ? (
+                  <form style={{ display: "flex", gap: 6 }} onSubmit={e => { e.preventDefault(); if (inputVal.trim()) { setQuest(inputVal.trim()); setInputVal(""); setShowInput(false); } }}>
+                    <input autoFocus value={inputVal} onChange={e => setInputVal(e.target.value)} placeholder="오늘의 퀘스트..."
+                      style={{ flex: 1, background: SU, border: `1px solid ${BH}`, borderRadius: 8, color: T1, fontSize: 13, padding: "8px 12px", outline: "none" }} />
+                    <button type="submit" style={{ background: ACC, border: "none", borderRadius: 8, color: BG, fontSize: 12, fontWeight: 600, padding: "8px 12px", cursor: "pointer" }}>설정</button>
+                    <button type="button" onClick={() => setShowInput(false)} style={{ background: SU, border: "none", borderRadius: 8, color: T2, fontSize: 12, padding: "8px 10px", cursor: "pointer" }}>✕</button>
+                  </form>
+                ) : (
+                  <button onClick={() => setShowInput(true)}
+                    style={{ display: "flex", alignItems: "center", gap: 6, width: "100%", padding: "8px 12px", borderRadius: 10, background: `${ACC}10`, border: `1px dashed ${ACC}30`, color: T4, fontSize: 12, cursor: "pointer" }}>
+                    🎯 일일 퀘스트 설정...
+                  </button>
+                )}
+              </div>
+              {/* End Day */}
+              <div style={{ borderTop: `1px solid ${B}`, padding: "10px 14px", flexShrink: 0, background: S }}>
+                <button onClick={() => setDayEnded(d => !d)}
+                  style={{ width: "100%", padding: "12px", borderRadius: 10, background: dayEnded ? T5 : ACC, border: "none", color: dayEnded ? T3 : BG, fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "all 0.2s" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  {dayEnded ? "하루 완료! 수고했어요 ✨" : "하루 종료"}
+                </button>
+              </div>
+            </>
+          )}
+
+          {activeView === "calendar" && <CalendarView />}
+          {activeView === "pomodoro" && <MobilePomodoroView />}
+          {activeView === "stats" && <MobileArchiveView />}
+          {activeView === "settings" && (
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}>
+              <div style={{ padding: "10px 16px", borderBottom: `1px solid ${B}`, background: S, flexShrink: 0 }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: T1 }}>설정</span>
+              </div>
+              <SettingsView settings={settings} onUpdate={setSettings} />
+            </div>
+          )}
+
+        </div>
+
+        {/* Bottom Nav */}
+        <div style={{ borderTop: `1px solid ${B}`, display: "grid", gridTemplateColumns: "repeat(5, 1fr)", background: S, flexShrink: 0 }}>
+          {NAV.map(tab => (
+            <button key={tab.id} onClick={() => setActiveView(tab.id)}
+              style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "10px 4px 8px", background: activeView === tab.id ? `${ACC}18` : "transparent", border: "none", cursor: "pointer", color: activeView === tab.id ? ACC : T4, transition: "all 0.15s" }}>
+              {tab.icon}
+              <span style={{ fontSize: 9, fontWeight: activeView === tab.id ? 600 : 400 }}>{tab.label}</span>
+            </button>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
 // ─── Root ─────────────────────────────────────────────────────────────────────
 export default function DemoApp() {
   const [projects, setProjects] = useState(INIT_PROJECTS);
@@ -741,7 +982,8 @@ export default function DemoApp() {
   };
 
   return (
-    <div className="artisans-demo dark" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', sans-serif" }}>
+    <>
+    <div className="artisans-demo dark hidden lg:block" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', sans-serif" }}>
       <div style={{ background: BG, borderRadius: 10, border: `1px solid ${BH}`, overflow: "hidden", boxShadow: "0 24px 64px rgba(0,0,0,0.6)", maxWidth: 1100, margin: "0 auto", height: "min(720px, 88vh)", display: "flex", flexDirection: "column" }}>
 
         {/* Title bar */}
@@ -812,5 +1054,9 @@ export default function DemoApp() {
         </div>
       </div>
     </div>
+    <div className="lg:hidden">
+      <MobileDemoApp />
+    </div>
+    </>
   );
 }
