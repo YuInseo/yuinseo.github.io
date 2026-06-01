@@ -21,31 +21,6 @@ export default function Home() {
           </ScrollReveal>
         </section>
 
-        {/* Projects */}
-        <section className="pb-10">
-          <ScrollReveal>
-            <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">프로젝트</p>
-          </ScrollReveal>
-          <ScrollReveal delay={80}>
-            <Link
-              href="/projects/artisans-compass"
-              className="group block rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--border-hi)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
-            >
-              <div className="mb-3 flex items-center justify-between">
-                <span className="text-[15px] font-semibold text-[var(--t1)] transition-colors group-hover:text-[var(--accent)]">
-                  Artisan&apos;s Compass
-                </span>
-                <span className="rounded-full border border-[var(--border-hi)] px-2.5 py-0.5 text-[11px] text-[var(--t4)]">
-                  Windows 앱
-                </span>
-              </div>
-              <p className="text-[13px] leading-relaxed text-[var(--t4)]">
-                하루를 기록하는 생산성 앱. 앱 사용 이력이 타임테이블에 자동으로 쌓이고, 프로젝트·할일·포모도로가 한 흐름으로 연결되는 구조.
-              </p>
-            </Link>
-          </ScrollReveal>
-        </section>
-
         {/* Certifications */}
         <section className="pb-10">
           <ScrollReveal delay={40}>
@@ -68,6 +43,31 @@ export default function Home() {
               </div>
               <p className="mt-2.5 text-[12px] text-[var(--t4)] transition-colors group-hover:text-[var(--accent)]">
                 자세히 보기 →
+              </p>
+            </Link>
+          </ScrollReveal>
+        </section>
+
+        {/* Projects */}
+        <section className="pb-10">
+          <ScrollReveal>
+            <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">프로젝트</p>
+          </ScrollReveal>
+          <ScrollReveal delay={80}>
+            <Link
+              href="/projects/artisans-compass"
+              className="group block rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--border-hi)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+            >
+              <div className="mb-3 flex items-center justify-between">
+                <span className="text-[15px] font-semibold text-[var(--t1)] transition-colors group-hover:text-[var(--accent)]">
+                  Artisan&apos;s Compass
+                </span>
+                <span className="rounded-full border border-[var(--border-hi)] px-2.5 py-0.5 text-[11px] text-[var(--t4)]">
+                  Windows 앱
+                </span>
+              </div>
+              <p className="text-[13px] leading-relaxed text-[var(--t4)]">
+                하루를 기록하는 생산성 앱. 앱 사용 이력이 타임테이블에 자동으로 쌓이고, 프로젝트·할일·포모도로가 한 흐름으로 연결되는 구조.
               </p>
             </Link>
           </ScrollReveal>
