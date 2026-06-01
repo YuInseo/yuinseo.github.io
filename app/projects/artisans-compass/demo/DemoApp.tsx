@@ -588,109 +588,198 @@ function PomodoroView() {
 
 // ─── Calendar View ────────────────────────────────────────────────────────────
 function CalendarView() {
-  const [weekOffset, setWeekOffset] = useState(0);
+  const [dayOffset, setDayOffset] = useState(0);   // offset from today (steps of 1 day)
+  const [calOpen, setCalOpen] = useState(false);   // monthly mini-cal
+  const [hourH, setHourH] = useState(50);          // px per hour (zoom)
+  const [monthOffset, setMonthOffset] = useState(0);
+
   const now = new Date();
-  const baseWeekStart = new Date(now);
-  baseWeekStart.setDate(now.getDate() - now.getDay());
-  baseWeekStart.setHours(0, 0, 0, 0);
-  const weekStart = new Date(baseWeekStart);
-  weekStart.setDate(weekStart.getDate() + weekOffset * 7);
-
-  const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(weekStart); d.setDate(weekStart.getDate() + i); return d; });
-  const DAY_LABELS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-  const TOTAL = 1440;
-  const todayStr = now.toDateString();
+  const today = new Date(now); today.setHours(0, 0, 0, 0);
+  const todayStr = today.toDateString();
   const nowMins = now.getHours() * 60 + now.getMinutes();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const touchX = useRef(0);
-  const touchY = useRef(0);
 
+  // 3 visible days
+  const days = Array.from({ length: 3 }, (_, i) => {
+    const d = new Date(today); d.setDate(today.getDate() + dayOffset + i); return d;
+  });
+
+  // Month mini-calendar
+  const calBase = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
+  const calYear = calBase.getFullYear();
+  const calMonth = calBase.getMonth();
+  const firstDay = calBase.getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const monthLabel = calBase.toLocaleDateString("ko-KR", { year: "numeric", month: "long" });
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const hourHRef = useRef(hourH);
+  useEffect(() => { hourHRef.current = hourH; }, [hourH]);
+
+  // Scroll to current time on mount
   useEffect(() => {
     if (scrollRef.current) {
-      const h = scrollRef.current.scrollHeight;
-      scrollRef.current.scrollTop = (h / 24) * 1; // scroll to 01:00 so early sessions visible
+      scrollRef.current.scrollTop = Math.max(0, (nowMins / 60) * hourH - 120);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchX.current = e.touches[0].clientX;
-    touchY.current = e.touches[0].clientY;
-  };
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const dx = e.changedTouches[0].clientX - touchX.current;
-    const dy = e.changedTouches[0].clientY - touchY.current;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-      setWeekOffset(o => dx < 0 ? o + 1 : o - 1);
-    }
-  };
+  // Non-passive touch: pinch-zoom + swipe
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    let startDist = 0, startH = 0, startX = 0, startY = 0, nTouches = 0;
 
-  const monthStr = weekStart.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+    const getDist = (t: TouchList) => {
+      const dx = t[0].clientX - t[1].clientX, dy = t[0].clientY - t[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    };
+    const onStart = (e: TouchEvent) => {
+      nTouches = e.touches.length;
+      if (e.touches.length === 2) { startDist = getDist(e.touches); startH = hourHRef.current; }
+      else { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }
+    };
+    const onMove = (e: TouchEvent) => {
+      if (e.touches.length !== 2) return;
+      e.preventDefault();
+      const scale = getDist(e.touches) / startDist;
+      const next = Math.max(24, Math.min(130, startH * scale));
+      setHourH(next); hourHRef.current = next;
+    };
+    const onEnd = (e: TouchEvent) => {
+      if (nTouches === 1 && e.changedTouches.length === 1) {
+        const dx = e.changedTouches[0].clientX - startX;
+        const dy = e.changedTouches[0].clientY - startY;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40)
+          setDayOffset(o => dx < 0 ? o + 3 : o - 3);
+      }
+      nTouches = 0;
+    };
+    el.addEventListener("touchstart", onStart, { passive: true });
+    el.addEventListener("touchmove", onMove, { passive: false });
+    el.addEventListener("touchend", onEnd, { passive: true });
+    return () => {
+      el.removeEventListener("touchstart", onStart);
+      el.removeEventListener("touchmove", onMove);
+      el.removeEventListener("touchend", onEnd);
+    };
+  }, []);
 
-  // Generate sessions per day for any week offset (shift session times for other weeks)
-  const getSessionsForDay = (dayIdx: number) => {
-    const base = WEEK_SESSIONS[dayIdx] || [];
-    if (weekOffset === 0) return base;
-    // For other weeks: shift session times slightly based on weekOffset for variety
-    const shift = (weekOffset * 37) % 60;
+  const TOTAL_H = 24 * hourH;
+  const DAY_SHORT = ["일", "월", "화", "수", "목", "금", "토"];
+
+  const getSessionsForDate = (date: Date) => {
+    const base = WEEK_SESSIONS[date.getDay()] || [];
+    const weekDiff = Math.round((date.getTime() - today.getTime()) / (7 * 24 * 60 * 60 * 1000));
+    if (weekDiff === 0) return base;
+    const shift = (weekDiff * 37) % 60;
     return base.map(s => ({ ...s, s: Math.max(0, s.s + shift), e: Math.max(30, s.e + shift) }));
   };
 
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+    <div ref={containerRef} style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+
       {/* Header */}
-      <div style={{ borderBottom: `1px solid ${B}`, padding: "8px 16px", display: "flex", alignItems: "center", gap: 16, flexShrink: 0, background: S }}>
-        <span style={{ fontSize: 13, fontWeight: 600, color: T1 }}>캘린더</span>
-        <span style={{ fontSize: 13, color: T4, cursor: "pointer" }}>반복 루틴</span>
+      <div style={{ borderBottom: `1px solid ${B}`, padding: "8px 12px", display: "flex", alignItems: "center", gap: 8, flexShrink: 0, background: S }}>
+        <button onClick={() => setCalOpen(o => !o)}
+          style={{ display: "flex", alignItems: "center", gap: 4, background: "transparent", border: "none", cursor: "pointer", color: T1, fontSize: 13, fontWeight: 600 }}>
+          {monthLabel}
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+            style={{ transform: calOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s", color: T4 }}>
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
         <div style={{ flex: 1 }} />
-        <span style={{ fontSize: 13, fontWeight: 600, color: T1 }}>{monthStr}</span>
-        <button onClick={() => setWeekOffset(o => o - 1)}
-          style={{ background: SU, border: `1px solid ${B}`, borderRadius: 5, color: T2, fontSize: 13, padding: "2px 10px", cursor: "pointer" }}>←</button>
-        <button onClick={() => setWeekOffset(0)}
-          style={{ background: weekOffset === 0 ? `${ACC}22` : SU, border: `1px solid ${weekOffset === 0 ? ACC + "44" : B}`, borderRadius: 5, color: weekOffset === 0 ? ACC : T2, fontSize: 11, padding: "3px 8px", cursor: "pointer" }}>오늘</button>
-        <button onClick={() => setWeekOffset(o => o + 1)}
-          style={{ background: SU, border: `1px solid ${B}`, borderRadius: 5, color: T2, fontSize: 13, padding: "2px 10px", cursor: "pointer" }}>→</button>
+        <button onClick={() => { setDayOffset(0); setMonthOffset(0); }}
+          style={{ background: dayOffset === 0 ? `${ACC}22` : SU, border: `1px solid ${dayOffset === 0 ? ACC + "44" : B}`, borderRadius: 6, color: dayOffset === 0 ? ACC : T2, fontSize: 11, padding: "3px 9px", cursor: "pointer" }}>오늘</button>
+        <button onClick={() => setDayOffset(o => o - 3)}
+          style={{ background: SU, border: `1px solid ${B}`, borderRadius: 6, color: T2, fontSize: 14, padding: "1px 9px", cursor: "pointer" }}>←</button>
+        <button onClick={() => setDayOffset(o => o + 3)}
+          style={{ background: SU, border: `1px solid ${B}`, borderRadius: 6, color: T2, fontSize: 14, padding: "1px 9px", cursor: "pointer" }}>→</button>
       </div>
-      {/* Day headers */}
-      <div style={{ display: "grid", gridTemplateColumns: "44px repeat(7, 1fr)", borderBottom: `1px solid ${B}`, flexShrink: 0, background: S }}>
+
+      {/* Collapsible monthly mini-calendar */}
+      {calOpen && (
+        <div style={{ background: S, borderBottom: `1px solid ${B}`, padding: "6px 10px 8px", flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: 5 }}>
+            <button onClick={() => setMonthOffset(o => o - 1)}
+              style={{ background: "transparent", border: "none", color: T3, fontSize: 17, cursor: "pointer", padding: "0 6px" }}>‹</button>
+            <span style={{ flex: 1, textAlign: "center" as const, fontSize: 11, fontWeight: 600, color: T2 }}>{monthLabel}</span>
+            <button onClick={() => setMonthOffset(o => o + 1)}
+              style={{ background: "transparent", border: "none", color: T3, fontSize: 17, cursor: "pointer", padding: "0 6px" }}>›</button>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", textAlign: "center" as const, marginBottom: 3 }}>
+            {["일","월","화","수","목","금","토"].map(d => (
+              <div key={d} style={{ fontSize: 9, color: T5, paddingBottom: 2 }}>{d}</div>
+            ))}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", textAlign: "center" as const }}>
+            {Array.from({ length: firstDay }, (_, i) => <div key={`p${i}`} />)}
+            {Array.from({ length: daysInMonth }, (_, i) => {
+              const d = i + 1;
+              const date = new Date(calYear, calMonth, d);
+              const isToday = date.toDateString() === todayStr;
+              const isInView = days.some(day => day.toDateString() === date.toDateString());
+              return (
+                <button key={d}
+                  onClick={() => { const diff = Math.round((date.getTime() - today.getTime()) / 86400000); setDayOffset(diff); }}
+                  style={{ padding: "3px 0", borderRadius: 4, border: "none", cursor: "pointer", fontSize: 10, fontWeight: isToday ? 700 : 400,
+                    background: isToday ? ACC : isInView ? `${ACC}28` : "transparent",
+                    color: isToday ? BG : isInView ? ACC : T3 }}>
+                  {d}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* 3-day column headers */}
+      <div style={{ display: "grid", gridTemplateColumns: "40px repeat(3, 1fr)", borderBottom: `1px solid ${B}`, flexShrink: 0, background: S }}>
         <div />
         {days.map((d, i) => {
           const isToday = d.toDateString() === todayStr;
           return (
-            <div key={i} style={{ textAlign: "center", padding: "6px 4px", borderLeft: `1px solid ${B}` }}>
-              <div style={{ fontSize: 9, color: T4, fontWeight: 600, letterSpacing: "0.08em", marginBottom: 3 }}>{DAY_LABELS[i]}</div>
-              <div style={{ width: 26, height: 26, borderRadius: "50%", background: isToday ? ACC : "transparent", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto", fontSize: 13, fontWeight: isToday ? 700 : 400, color: isToday ? BG : T1 }}>{d.getDate()}</div>
+            <div key={i} style={{ textAlign: "center" as const, padding: "5px 2px", borderLeft: `1px solid ${B}` }}>
+              <div style={{ fontSize: 9, color: T4, fontWeight: 600, letterSpacing: "0.06em", marginBottom: 3 }}>{DAY_SHORT[d.getDay()]}</div>
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: isToday ? ACC : "transparent", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto", fontSize: 12, fontWeight: isToday ? 700 : 400, color: isToday ? BG : T1 }}>
+                {d.getDate()}
+              </div>
             </div>
           );
         })}
       </div>
-      {/* Scrollable grid */}
-      <div ref={scrollRef} style={{ flex: 1, overflow: "auto", display: "grid", gridTemplateColumns: "44px repeat(7, 1fr)" }}>
-        {/* Time column */}
-        <div style={{ position: "relative", height: 1200 }}>
-          {Array.from({ length: 13 }, (_, i) => i * 2).map(h => (
+
+      {/* Scrollable 3-day time grid */}
+      <div ref={scrollRef} style={{ flex: 1, overflow: "auto", display: "grid", gridTemplateColumns: "40px repeat(3, 1fr)" }}>
+        {/* Time labels */}
+        <div style={{ position: "relative", height: TOTAL_H }}>
+          {Array.from({ length: 24 }, (_, h) => h % 2 === 0 && (
             <div key={h} style={{ position: "absolute", top: `${(h / 24) * 100}%`, width: "100%", paddingRight: 4, transform: "translateY(-50%)" }}>
-              <span style={{ fontSize: 9, color: T5, fontFamily: "monospace", float: "right" }}>{h === 0 ? "" : `${String(h).padStart(2, "0")}:00`}</span>
+              <span style={{ fontSize: 9, color: T5, fontFamily: "monospace", float: "right" as const }}>
+                {h === 0 ? "" : `${String(h).padStart(2, "0")}:00`}
+              </span>
             </div>
           ))}
         </div>
         {/* Day columns */}
         {days.map((d, i) => {
-          const sessions = getSessionsForDay(i);
+          const sessions = getSessionsForDate(d);
           const isToday = d.toDateString() === todayStr;
           return (
-            <div key={i} style={{ borderLeft: `1px solid ${B}`, position: "relative", height: 1200, background: isToday ? `${ACC}05` : "transparent" }}>
+            <div key={i} style={{ borderLeft: `1px solid ${B}`, position: "relative", height: TOTAL_H, background: isToday ? `${ACC}05` : "transparent" }}>
               {Array.from({ length: 25 }, (_, h) => (
                 <div key={h} style={{ position: "absolute", top: `${(h / 24) * 100}%`, left: 0, right: 0, borderTop: `1px solid ${B}22`, pointerEvents: "none" }} />
               ))}
               {isToday && (
-                <div style={{ position: "absolute", top: `${(nowMins / TOTAL) * 100}%`, left: 0, right: 0, zIndex: 10, pointerEvents: "none" }}>
+                <div style={{ position: "absolute", top: `${(nowMins / 1440) * 100}%`, left: 0, right: 0, zIndex: 10, pointerEvents: "none" }}>
                   <div style={{ borderTop: "2px solid #e88060", marginLeft: -4 }} />
                   <div style={{ position: "absolute", left: -4, top: "50%", transform: "translateY(-50%)", width: 8, height: 8, borderRadius: "50%", background: "#e88060" }} />
                 </div>
               )}
               {sessions.map((s, j) => (
-                <div key={j} style={{ position: "absolute", top: `${(s.s / TOTAL) * 100}%`, height: `${Math.max(0.5, (s.e - s.s) / TOTAL) * 100}%`, left: 2, right: 2, background: s.color, opacity: 0.82, borderRadius: 4, padding: "2px 4px", overflow: "hidden" }}>
-                  <span style={{ fontSize: 9, color: "#fff", fontWeight: 600, whiteSpace: "nowrap" }}>{s.name}</span>
+                <div key={j} style={{ position: "absolute", top: `${(s.s / 1440) * 100}%`, height: `${Math.max(0.5, (s.e - s.s) / 1440) * 100}%`, left: 2, right: 2, background: s.color, opacity: 0.82, borderRadius: 4, padding: "2px 4px", overflow: "hidden" }}>
+                  <span style={{ fontSize: 9, color: "#fff", fontWeight: 600, whiteSpace: "nowrap" as const }}>{s.name}</span>
                 </div>
               ))}
             </div>
