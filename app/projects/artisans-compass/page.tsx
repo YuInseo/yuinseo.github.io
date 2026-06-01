@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Nav from "../../components/Nav";
 import DownloadButton from "./DownloadButton";
 import DemoSection from "./DemoSection";
+import ScrollReveal from "./ScrollReveal";
 
 export const metadata: Metadata = {
   title: "Artisan's Compass",
@@ -36,20 +37,26 @@ export default function ArtisansCompassPage() {
 
       {/* Archive modes */}
       <section className="mx-auto max-w-2xl px-5 py-14">
-        <p className="mb-8 text-sm font-medium text-[var(--t2)]">데일리 아카이브 모드</p>
+        <ScrollReveal>
+          <p className="mb-8 text-sm font-medium text-[var(--t2)]">데일리 아카이브 모드</p>
+        </ScrollReveal>
         <div className="grid gap-8 sm:grid-cols-2">
-          <div className="border-l-2 pl-5" style={{ borderColor: "var(--archive-1)" }}>
-            <p className="mb-1.5 text-sm font-semibold text-[var(--t1)]">고정 모드</p>
-            <p className="text-sm leading-relaxed text-[var(--t3)]">
-              자정 00:00 정각에 다음 날로 넘어가요.
-            </p>
-          </div>
-          <div className="border-l-2 pl-5" style={{ borderColor: "var(--archive-2)" }}>
-            <p className="mb-1.5 text-sm font-semibold text-[var(--t1)]">동적 모드</p>
-            <p className="text-sm leading-relaxed text-[var(--t3)]">
-              앱을 닫기 전까지 당일로 기록해요. 새벽 작업자용.
-            </p>
-          </div>
+          <ScrollReveal delay={80}>
+            <div className="border-l-2 pl-5" style={{ borderColor: "var(--archive-1)" }}>
+              <p className="mb-1.5 text-sm font-semibold text-[var(--t1)]">고정 모드</p>
+              <p className="text-sm leading-relaxed text-[var(--t3)]">
+                자정 00:00 정각에 다음 날로 넘어가요.
+              </p>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={180}>
+            <div className="border-l-2 pl-5" style={{ borderColor: "var(--archive-2)" }}>
+              <p className="mb-1.5 text-sm font-semibold text-[var(--t1)]">동적 모드</p>
+              <p className="text-sm leading-relaxed text-[var(--t3)]">
+                앱을 닫기 전까지 당일로 기록해요. 새벽 작업자용.
+              </p>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -58,16 +65,24 @@ export default function ArtisansCompassPage() {
       {/* Other features */}
       <section className="mx-auto max-w-2xl px-5 py-14">
         <div className="grid gap-8 sm:grid-cols-3">
-          {[
-            { title: "위젯 모드", desc: "바탕화면에 올려두고 쓸 수 있어요. 위치·크기 잠금 가능." },
-            { title: "테마", desc: "여러 색상 테마. 위젯과 메인 화면에 각각 적용 가능." },
-            { title: "설정", desc: "타임테이블 카테고리, 작업 외 앱, 아카이브 모드 등." },
-          ].map((item) => (
-            <div key={item.title}>
-              <p className="mb-1.5 text-sm font-medium text-[var(--t2)]">{item.title}</p>
-              <p className="text-sm leading-relaxed text-[var(--t4)]">{item.desc}</p>
+          <ScrollReveal delay={0}>
+            <div>
+              <p className="mb-1.5 text-sm font-medium text-[var(--t2)]">위젯 모드</p>
+              <p className="text-sm leading-relaxed text-[var(--t4)]">바탕화면에 올려두고 쓸 수 있어요. 위치·크기 잠금 가능.</p>
             </div>
-          ))}
+          </ScrollReveal>
+          <ScrollReveal delay={120}>
+            <div>
+              <p className="mb-1.5 text-sm font-medium text-[var(--t2)]">테마</p>
+              <p className="text-sm leading-relaxed text-[var(--t4)]">여러 색상 테마. 위젯과 메인 화면에 각각 적용 가능.</p>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={240}>
+            <div>
+              <p className="mb-1.5 text-sm font-medium text-[var(--t2)]">설정</p>
+              <p className="text-sm leading-relaxed text-[var(--t4)]">타임테이블 카테고리, 작업 외 앱, 아카이브 모드 등.</p>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
