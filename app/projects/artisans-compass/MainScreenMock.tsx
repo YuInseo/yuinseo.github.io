@@ -102,10 +102,14 @@ const TIME_MARKS = [10, 12, 14, 16, 18, 20, 22];
 const TIME_LABELS = ["00","02","04","06","08","10","12","14","16","18","20","22"];
 const DAYS = 27;
 
-/* ── shared ── */
+const SHORT_LABEL: Record<ProjId, string> = {
+  general: "일반", artisans: "AC", p2: "P2", p4: "P4", p9: "P9", p6: "P6",
+};
+
+/* ── desktop top tabs ── */
 function Tabs({ activeId, onSelect }: { activeId: ProjId; onSelect: (id: ProjId) => void }) {
   return (
-    <div className="flex items-end overflow-x-auto border-b border-[var(--border)] bg-[var(--bg)] px-1 pt-1 [scrollbar-width:none]">
+    <div className="hidden items-end overflow-x-auto border-b border-[var(--border)] bg-[var(--bg)] px-1 pt-1 [scrollbar-width:none] lg:flex">
       {PROJECTS.map(p => (
         <button key={p.id} onClick={() => onSelect(p.id)}
           className="relative shrink-0 px-3 pb-2 pt-1.5 text-[11px] font-medium transition-colors"
@@ -116,6 +120,30 @@ function Tabs({ activeId, onSelect }: { activeId: ProjId; onSelect: (id: ProjId)
             style={{ background: p.color, opacity: activeId === p.id ? 1 : 0 }} />
         </button>
       ))}
+    </div>
+  );
+}
+
+/* ── mobile bottom tab bar ── */
+function BottomTabBar({ activeId, onSelect }: { activeId: ProjId; onSelect: (id: ProjId) => void }) {
+  return (
+    <div className="grid grid-cols-6 border-t border-[var(--border)] bg-[var(--surface)]">
+      {PROJECTS.map(p => {
+        const isActive = p.id === activeId;
+        return (
+          <button key={p.id} onClick={() => onSelect(p.id)}
+            className="flex flex-col items-center gap-1 py-2.5 transition-colors"
+            style={{ background: isActive ? `${p.color}1a` : "transparent" }}
+          >
+            <div className="h-1.5 w-1.5 rounded-full transition-all duration-200"
+              style={{ background: isActive ? p.color : "var(--t5)", transform: isActive ? "scale(1.4)" : "scale(1)" }} />
+            <span className="text-[9px] font-semibold leading-none transition-colors duration-200"
+              style={{ color: isActive ? p.color : "var(--t5)" }}>
+              {SHORT_LABEL[p.id]}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -305,12 +333,13 @@ export default function MainScreenMock() {
     <div className="overflow-hidden rounded-xl border border-[var(--border-hi)] bg-[var(--surface)]"
       style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.28)" }}>
 
-      {/* tabs — shared */}
+      {/* tabs — desktop only */}
       <Tabs activeId={activeId} onSelect={setActiveId} />
 
-      {/* ── mobile: calendar ── */}
+      {/* ── mobile: calendar + bottom tab bar ── */}
       <div className="lg:hidden">
         <CalendarGrid activeId={activeId} />
+        <BottomTabBar activeId={activeId} onSelect={setActiveId} />
       </div>
 
       {/* ── desktop: gantt + todo + timeline ── */}
