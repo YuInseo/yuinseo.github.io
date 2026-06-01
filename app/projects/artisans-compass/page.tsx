@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Nav from "../../components/Nav";
 import DownloadButton from "./DownloadButton";
 import TimelineCard from "./TimelineCard";
-import DemoApp from "./demo/DemoApp";
-import FeatureTabs from "./FeatureTabs";
+import DemoSection from "./DemoSection";
 
 export const metadata: Metadata = {
   title: "Artisan's Compass",
@@ -31,10 +30,7 @@ export default function ArtisansCompassPage() {
       {/* Live demo */}
       <section className="mx-auto max-w-5xl px-5 py-14">
         <p className="mb-5 text-sm font-medium text-[var(--t2)]">라이브 데모</p>
-        <DemoApp />
-        <div className="mx-auto max-w-2xl">
-          <FeatureTabs />
-        </div>
+        <DemoSection />
       </section>
 
       <hr className="border-[var(--border)]" />

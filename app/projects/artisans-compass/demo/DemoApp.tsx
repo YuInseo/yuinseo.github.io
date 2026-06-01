@@ -933,10 +933,11 @@ function MobileArchiveView() {
 }
 
 // ─── Mobile Demo App ──────────────────────────────────────────────────────────
-function MobileDemoApp() {
+type MobileView = "day" | "calendar" | "pomodoro" | "stats" | "settings";
+
+function MobileDemoApp({ activeView, onViewChange }: { activeView: MobileView; onViewChange: (v: MobileView) => void }) {
   const [projects, setProjects] = useState(INIT_PROJECTS);
   const [activeId, setActiveId] = useState("p9");
-  const [activeView, setActiveView] = useState<"day" | "calendar" | "pomodoro" | "stats" | "settings">("day");
   const [quest, setQuest] = useState("");
   const [dayEnded, setDayEnded] = useState(false);
   const [settings, setSettings] = useState<AppSettings>(MOCK_SETTINGS);
@@ -1052,7 +1053,7 @@ function MobileDemoApp() {
         {/* Bottom Nav */}
         <div style={{ borderTop: `1px solid ${B}`, display: "grid", gridTemplateColumns: "repeat(5, 1fr)", background: S, flexShrink: 0 }}>
           {NAV.map(tab => (
-            <button key={tab.id} onClick={() => setActiveView(tab.id)}
+            <button key={tab.id} onClick={() => onViewChange(tab.id)}
               style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "10px 4px 8px", background: activeView === tab.id ? `${ACC}18` : "transparent", border: "none", cursor: "pointer", color: activeView === tab.id ? ACC : T4, transition: "all 0.15s" }}>
               {tab.icon}
               <span style={{ fontSize: 9, fontWeight: activeView === tab.id ? 600 : 400 }}>{tab.label}</span>
@@ -1066,7 +1067,8 @@ function MobileDemoApp() {
 }
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
-export default function DemoApp() {
+export type { MobileView };
+export default function DemoApp({ mobileView, onMobileViewChange }: { mobileView?: MobileView; onMobileViewChange?: (v: MobileView) => void } = {}) {
   const [projects, setProjects] = useState(INIT_PROJECTS);
   const [activeId, setActiveId] = useState("p9");
   const [activeView, setActiveView] = useState("day");
@@ -1158,7 +1160,10 @@ export default function DemoApp() {
       </div>
     </div>
     <div className="lg:hidden">
-      <MobileDemoApp />
+      <MobileDemoApp
+        activeView={mobileView ?? "day"}
+        onViewChange={onMobileViewChange ?? (() => {})}
+      />
     </div>
     </>
   );

@@ -12,7 +12,7 @@ const FEATURES = [
     id: "calendar",
     label: "캘린더",
     title: "주간 캘린더",
-    desc: "주간 단위로 작업 패턴을 시각화해요. 프로젝트별 색상으로 일정이 구분되고, 좌우로 스와이프하면 이전·다음 주로 이동할 수 있어요.",
+    desc: "3일 단위로 작업 패턴을 시각화해요. 프로젝트별 색상으로 일정이 구분되고, 좌우 스와이프 또는 핀치로 시간 축을 확대·축소할 수 있어요.",
   },
   {
     id: "pomodoro",
@@ -34,9 +34,17 @@ const FEATURES = [
   },
 ];
 
-export default function FeatureTabs() {
-  const [activeId, setActiveId] = useState("day");
-  const feature = FEATURES.find(f => f.id === activeId)!;
+interface Props {
+  activeId?: string;
+  onSelect?: (id: string) => void;
+}
+
+export default function FeatureTabs({ activeId: controlledId, onSelect }: Props = {}) {
+  const [internalId, setInternalId] = useState("day");
+  const activeId = controlledId ?? internalId;
+  const setActive = (id: string) => { setInternalId(id); onSelect?.(id); };
+
+  const feature = FEATURES.find(f => f.id === activeId) ?? FEATURES[0];
 
   return (
     <div className="mt-8">
@@ -44,7 +52,7 @@ export default function FeatureTabs() {
         {FEATURES.map(f => (
           <button
             key={f.id}
-            onClick={() => setActiveId(f.id)}
+            onClick={() => setActive(f.id)}
             className="relative shrink-0 px-4 pb-2.5 pt-2 text-[13px] font-medium transition-colors"
             style={{ color: activeId === f.id ? "var(--t1)" : "var(--t4)" }}
           >
@@ -55,7 +63,7 @@ export default function FeatureTabs() {
           </button>
         ))}
       </div>
-      <div className="pt-5 transition-all duration-200">
+      <div className="pt-5">
         <p className="mb-1.5 text-[13px] font-semibold text-[var(--t1)]">{feature.title}</p>
         <p className="text-[13px] leading-relaxed text-[var(--t3)]">{feature.desc}</p>
       </div>
