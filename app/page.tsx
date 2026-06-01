@@ -83,7 +83,15 @@ export default function Home() {
             <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">블로그</p>
           </ScrollReveal>
           <ScrollReveal delay={120}>
-            <p className="text-[14px] text-[var(--t4)]">아직 없어요.</p>
+            <Link
+              href="/blog"
+              className="group block rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--border-hi)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+            >
+              <p className="mb-1 text-[14px] font-semibold text-[var(--t1)] transition-colors group-hover:text-[var(--accent)]">
+                Today I Learned
+              </p>
+              <p className="text-[13px] text-[var(--t4)]">개발하면서 배운 것들을 짧게 기록합니다.</p>
+            </Link>
           </ScrollReveal>
         </section>
 
