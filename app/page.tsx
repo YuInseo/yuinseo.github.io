@@ -24,7 +24,7 @@ export default function Home() {
         {/* Certifications */}
         <section className="pb-10">
           <ScrollReveal delay={40}>
-            <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">자격증</p>
+            <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">학력 & 자격증</p>
           </ScrollReveal>
           <ScrollReveal delay={120}>
             <Link
@@ -32,6 +32,10 @@ export default function Home() {
               className="group block rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--border-hi)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
             >
               <div className="mb-3 flex flex-col gap-2.5">
+                <div className="flex items-center gap-3">
+                  <span className="w-16 shrink-0 text-[10px] uppercase tracking-widest text-[var(--t5)]">학력</span>
+                  <span className="text-[13px] text-[var(--t3)]">학점은행제 시각디자인학과</span>
+                </div>
                 <div className="flex items-center gap-3">
                   <span className="w-16 shrink-0 text-[10px] uppercase tracking-widest text-[var(--t5)]">어학</span>
                   <span className="text-[13px] text-[var(--t3)]">TOEIC 800</span>

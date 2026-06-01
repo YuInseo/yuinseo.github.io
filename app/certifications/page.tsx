@@ -3,9 +3,19 @@ import Nav from "../components/Nav";
 import ScrollReveal from "../components/ScrollReveal";
 
 export const metadata: Metadata = {
-  title: "자격증",
-  description: "보유 자격증 목록",
+  title: "학력 & 자격증",
+  description: "학력 및 보유 자격증",
 };
+
+const EDUCATION = [
+  {
+    name: "시각디자인 (학사)",
+    nameEn: "Visual Design, Bachelor's Degree",
+    issuer: "국가평생교육진흥원",
+    tags: ["학점은행제", "시각디자인학과"],
+    desc: "학점은행제를 통해 시각디자인 전공을 이수 중.",
+  },
+];
 
 const LANGUAGE = [
   {
@@ -41,7 +51,9 @@ const TECHNICAL = [
   },
 ];
 
-function CertList({ certs, startDelay = 0 }: { certs: typeof LANGUAGE; startDelay?: number }) {
+type CertItem = { name: string; nameEn: string; issuer: string; tags: string[]; desc: string };
+
+function CertList({ certs, startDelay = 0 }: { certs: CertItem[]; startDelay?: number }) {
   return (
     <div className="space-y-4">
       {certs.map((cert, i) => (
@@ -82,12 +94,19 @@ export default function CertificationsPage() {
       <section className="mx-auto max-w-2xl px-5 pb-20 pt-20">
         <ScrollReveal>
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
-            certifications
+            education & certifications
           </p>
-          <h1 className="mb-14 text-3xl font-bold tracking-tight">자격증</h1>
+          <h1 className="mb-14 text-3xl font-bold tracking-tight">학력 & 자격증</h1>
         </ScrollReveal>
 
         <div className="space-y-14">
+          <div>
+            <ScrollReveal>
+              <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">학력</p>
+            </ScrollReveal>
+            <CertList certs={EDUCATION} startDelay={80} />
+          </div>
+
           <div>
             <ScrollReveal>
               <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">어학능력</p>
