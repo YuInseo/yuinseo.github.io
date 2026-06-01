@@ -2,8 +2,11 @@ import Link from "next/link";
 import Nav from "./components/Nav";
 import ScrollReveal from "./components/ScrollReveal";
 import Footer from "./components/Footer";
+import { POSTS } from "./blog/posts";
 
 export default function Home() {
+  const recentPosts = POSTS.slice(0, 2);
+
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--t1)]">
       <Nav />
@@ -23,38 +26,33 @@ export default function Home() {
         </section>
 
         {/* Certifications */}
-        <section className="pb-10">
-          <ScrollReveal delay={40}>
+        <section className="pb-14">
+          <ScrollReveal>
             <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">학력 & 자격증</p>
           </ScrollReveal>
-          <ScrollReveal delay={120}>
-            <Link
-              href="/certifications"
-              className="group block rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--border-hi)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
-            >
-              <div className="mb-3 flex flex-col gap-2.5">
-                <div className="flex items-center gap-3">
-                  <span className="w-16 shrink-0 text-[10px] uppercase tracking-widest text-[var(--t5)]">학력</span>
-                  <span className="text-[13px] text-[var(--t3)]">학점은행제 시각디자인학과</span>
+          <div className="space-y-0">
+            {[
+              { label: "시각디자인학과", detail: "학점은행제 · 2025.06 수료" },
+              { label: "TOEIC", detail: "800점" },
+              { label: "정보처리기사 · ITQ · GTQ 1급", detail: "국가공인" },
+            ].map((row, i) => (
+              <ScrollReveal key={row.label} delay={i * 60}>
+                <div className="flex items-baseline justify-between border-b border-[var(--border)] py-3.5">
+                  <span className="text-[14px] text-[var(--t2)]">{row.label}</span>
+                  <span className="text-[12px] text-[var(--t5)]">{row.detail}</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="w-16 shrink-0 text-[10px] uppercase tracking-widest text-[var(--t5)]">어학</span>
-                  <span className="text-[13px] text-[var(--t3)]">TOEIC 800</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="w-16 shrink-0 text-[10px] uppercase tracking-widest text-[var(--t5)]">기술</span>
-                  <span className="text-[13px] text-[var(--t3)]">정보처리기사 · ITQ · GTQ 1급</span>
-                </div>
-              </div>
-              <p className="mt-2.5 text-[12px] text-[var(--t4)] transition-colors group-hover:text-[var(--accent)]">
-                자세히 보기 →
-              </p>
+              </ScrollReveal>
+            ))}
+          </div>
+          <ScrollReveal delay={200}>
+            <Link href="/certifications" className="mt-4 inline-block text-[12px] text-[var(--t4)] transition-colors hover:text-[var(--accent)]">
+              자세히 보기 →
             </Link>
           </ScrollReveal>
         </section>
 
         {/* Projects */}
-        <section className="pb-10">
+        <section className="pb-14">
           <ScrollReveal>
             <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">프로젝트</p>
           </ScrollReveal>
@@ -80,18 +78,25 @@ export default function Home() {
 
         {/* Blog */}
         <section className="pb-32">
-          <ScrollReveal delay={40}>
+          <ScrollReveal>
             <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">블로그</p>
           </ScrollReveal>
-          <ScrollReveal delay={120}>
-            <Link
-              href="/blog"
-              className="group block rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--border-hi)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
-            >
-              <p className="mb-1 text-[14px] font-semibold text-[var(--t1)] transition-colors group-hover:text-[var(--accent)]">
-                Today I Learned
-              </p>
-              <p className="text-[13px] text-[var(--t4)]">개발하면서 배운 것들을 짧게 기록합니다.</p>
+          <div className="space-y-0">
+            {recentPosts.map((post, i) => (
+              <ScrollReveal key={post.slug} delay={i * 60}>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="group flex items-baseline justify-between border-b border-[var(--border)] py-3.5"
+                >
+                  <span className="text-[14px] text-[var(--t2)] transition-colors group-hover:text-[var(--t1)]">{post.title}</span>
+                  <span className="ml-4 shrink-0 text-[12px] text-[var(--t5)]">{post.date.slice(0, 7)}</span>
+                </Link>
+              </ScrollReveal>
+            ))}
+          </div>
+          <ScrollReveal delay={140}>
+            <Link href="/blog" className="mt-4 inline-block text-[12px] text-[var(--t4)] transition-colors hover:text-[var(--accent)]">
+              더 보기 →
             </Link>
           </ScrollReveal>
         </section>
