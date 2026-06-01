@@ -46,6 +46,30 @@ export default function Home() {
           </ScrollReveal>
         </section>
 
+        {/* Certifications */}
+        <section className="pb-10">
+          <ScrollReveal delay={40}>
+            <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">자격증</p>
+          </ScrollReveal>
+          <ScrollReveal delay={120}>
+            <Link
+              href="/certifications"
+              className="group block rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--border-hi)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+            >
+              <div className="flex flex-wrap gap-x-4 gap-y-2">
+                {["정보처리기사", "ITQ", "GTQ 1급"].map((cert) => (
+                  <span key={cert} className="text-[14px] font-medium text-[var(--t2)] transition-colors group-hover:text-[var(--t1)]">
+                    {cert}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-2.5 text-[12px] text-[var(--t4)] transition-colors group-hover:text-[var(--accent)]">
+                자세히 보기 →
+              </p>
+            </Link>
+          </ScrollReveal>
+        </section>
+
         {/* Blog */}
         <section className="pb-32">
           <ScrollReveal delay={40}>
