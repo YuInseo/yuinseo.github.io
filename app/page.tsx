@@ -16,21 +16,23 @@ export default function Home() {
         </section>
 
         <section className="pb-6">
+          <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">프로젝트</p>
           <Link
             href="/projects/artisans-compass"
             className="group inline-flex items-baseline gap-3"
           >
-            <span className="text-[15px] text-[var(--t2)] underline decoration-[var(--border-hi)] underline-offset-4 transition-colors group-hover:decoration-[var(--accent-hi)]">
+            <span className="text-[15px] font-medium text-[var(--t1)] underline decoration-[var(--border-hi)] underline-offset-4 transition-colors group-hover:decoration-[var(--accent-hi)]">
               Artisan&apos;s Compass
             </span>
-            <span className="text-xs text-[var(--t5)] transition-colors group-hover:text-[var(--accent)]">
+            <span className="text-xs text-[var(--t4)] transition-colors group-hover:text-[var(--accent)]">
               Windows 앱
             </span>
           </Link>
         </section>
 
         <section className="pb-32">
-          <p className="text-sm text-[var(--t5)]">글은 아직 없어요.</p>
+          <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">블로그</p>
+          <p className="text-[14px] text-[var(--t4)]">글은 아직 없어요.</p>
         </section>
       </main>
 

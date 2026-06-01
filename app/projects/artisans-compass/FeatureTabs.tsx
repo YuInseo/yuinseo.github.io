@@ -79,7 +79,7 @@ export default function FeatureTabs({ activeId = "day", borderless = false }: Pr
 
   return (
     <div className={borderless ? "" : "mt-8 pt-6 border-t border-[var(--border)]"}>
-      <p className="mb-2 text-[13px] font-semibold text-[var(--t1)]">{feature.title}</p>
+      <p className="mb-2 text-[15px] font-semibold text-[var(--t1)]">{feature.title}</p>
       <p className="mb-4 text-[13px] leading-relaxed text-[var(--t3)]">{feature.desc}</p>
       <ul className="space-y-2.5">
         {feature.points.map((point, i) => (
