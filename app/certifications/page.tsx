@@ -50,6 +50,13 @@ const TECHNICAL = [
     tags: ["포토샵", "1급"],
     desc: "그래픽 툴 활용 역량을 검증하는 국가공인 자격.",
   },
+  {
+    name: "컴퓨터활용능력 1급",
+    nameEn: "Computer Utilization Ability Level 1",
+    issuer: "대한상공회의소",
+    tags: ["1급"],
+    desc: "스프레드시트·데이터베이스 활용 능력을 검증하는 국가기술자격.",
+  },
 ];
 
 type CertItem = { name: string; nameEn: string; issuer: string; tags: string[]; desc: string };
