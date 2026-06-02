@@ -1214,6 +1214,11 @@ export default function DemoApp({ mobileView, onMobileViewChange, diaryOpen, onD
       p.id !== activeId ? p : { ...p, todos: p.todos.map(t => t.id === id ? { ...t, done: !t.done } : t) }
     ));
 
+  const handlePcViewChange = (v: string) => {
+    setActiveView(v);
+    onMobileViewChange?.(v as MobileView);
+  };
+
   const viewLabel: Record<string, string> = {
     day: "오늘", calendar: "캘린더", pomodoro: "포모도로", stats: "일일 아카이브", settings: "설정",
   };
@@ -1242,7 +1247,7 @@ export default function DemoApp({ mobileView, onMobileViewChange, diaryOpen, onD
 
         {/* Body */}
         <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
-          <Sidebar active={activeView} onSet={setActiveView} />
+          <Sidebar active={activeView} onSet={handlePcViewChange} />
           <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
 
             {activeView === "day" && (
