@@ -49,14 +49,14 @@ export default function VisitorTracker() {
       }
 
       try {
-        await fetch(`https://ntfy.sh/${NTFY_TOPIC}`, {
+        const params = new URLSearchParams({
+          title: '👀 새 방문자',
+          tags: 'wave',
+          priority: 'default',
+        });
+        await fetch(`https://ntfy.sh/${NTFY_TOPIC}?${params}`, {
           method: 'POST',
           body: `페이지: ${pathname}\n시간: ${kstTime} (KST)\n기기: ${device}\n위치: ${location}`,
-          headers: {
-            Title: '👀 새 방문자',
-            Priority: 'default',
-            Tags: 'wave',
-          },
         });
       } catch {
         // ntfy call failed — localStorage flag already set, won't retry
