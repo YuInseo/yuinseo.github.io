@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 const NTFY_TOPIC = 'yuinseo-site-v9k4x2mw8p';
-const STORAGE_KEY = 'ytv_first_visit_done';
+const STORAGE_PREFIX = 'ytv_visited:';
 
 function getDeviceLabel(ua: string): string {
   if (/iPhone/.test(ua)) return 'iPhone';
@@ -21,9 +21,9 @@ export default function VisitorTracker() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (localStorage.getItem(STORAGE_KEY)) return;
-    // Mark immediately to prevent duplicate sends on rapid re-renders
-    localStorage.setItem(STORAGE_KEY, '1');
+    const storageKey = STORAGE_PREFIX + pathname;
+    if (localStorage.getItem(storageKey)) return;
+    localStorage.setItem(storageKey, '1');
 
     const notify = async () => {
       const kstTime = new Intl.DateTimeFormat('ko-KR', {
@@ -64,8 +64,7 @@ export default function VisitorTracker() {
     };
 
     notify();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pathname]);
 
   return null;
 }
