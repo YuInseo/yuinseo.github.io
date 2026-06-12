@@ -22,41 +22,44 @@ export default function VisitorTracker() {
 
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY)) return;
+    // Mark immediately to prevent duplicate sends on rapid re-renders
+    localStorage.setItem(STORAGE_KEY, '1');
 
     const notify = async () => {
+      const kstTime = new Intl.DateTimeFormat('ko-KR', {
+        timeZone: 'Asia/Seoul',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(new Date());
+
+      const device = getDeviceLabel(navigator.userAgent);
+
+      let location = '알 수 없음';
       try {
         const geoRes = await fetch('https://ipapi.co/json/');
         const geo = await geoRes.json();
-
-        const kstTime = new Intl.DateTimeFormat('ko-KR', {
-          timeZone: 'Asia/Seoul',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-        }).format(new Date());
-
-        const device = getDeviceLabel(navigator.userAgent);
         const city = geo.city ?? '';
-        const country = geo.country_name ?? '알 수 없음';
-        const location = city ? `${city}, ${country}` : country;
+        const country = geo.country_name ?? '';
+        if (country) location = city ? `${city}, ${country}` : country;
+      } catch {
+        // Geo lookup failed — proceed without location
+      }
 
-        const body = `페이지: ${pathname}\n시간: ${kstTime} (KST)\n기기: ${device}\n위치: ${location}`;
-
+      try {
         await fetch(`https://ntfy.sh/${NTFY_TOPIC}`, {
           method: 'POST',
-          body,
+          body: `페이지: ${pathname}\n시간: ${kstTime} (KST)\n기기: ${device}\n위치: ${location}`,
           headers: {
             Title: '👀 새 방문자',
             Priority: 'default',
             Tags: 'wave',
           },
         });
-
-        localStorage.setItem(STORAGE_KEY, '1');
       } catch {
-        // Silent fail — don't affect visitor experience
+        // ntfy call failed — localStorage flag already set, won't retry
       }
     };
 
