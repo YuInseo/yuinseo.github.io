@@ -1,7 +1,5 @@
 'use client';
-import Nav from "../components/Nav";
 import ScrollReveal from "../components/ScrollReveal";
-import Footer from "../components/Footer";
 import { useLang } from "../i18n/LangContext";
 
 type CertItem = { name: string; nameEn: string; issuer: string; tags: string[]; desc: string };
@@ -91,8 +89,6 @@ export default function CertsContent() {
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--t1)]">
-      <Nav />
-
       <section className="mx-auto max-w-2xl px-5 pb-20 pt-20">
         <ScrollReveal>
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
@@ -107,8 +103,6 @@ export default function CertsContent() {
           <Section label={t.certs.sectionTechnical} certs={technical} startDelay={80} />
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

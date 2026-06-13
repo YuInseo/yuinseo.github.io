@@ -47,7 +47,7 @@ export default function HomeContent() {
           ))}
         </div>
         <ScrollReveal delay={200}>
-          <Link href="/certifications" className="mt-4 inline-block text-[12px] text-[var(--t4)] transition-colors hover:text-[var(--accent)]">
+          <Link href={`/${lang}/certifications`} className="mt-4 inline-block text-[12px] text-[var(--t4)] transition-colors hover:text-[var(--accent)]">
             {t.home.certsMore}
           </Link>
         </ScrollReveal>
@@ -59,7 +59,7 @@ export default function HomeContent() {
         </ScrollReveal>
         <ScrollReveal delay={80}>
           <Link
-            href="/projects/artisans-compass"
+            href={`/${lang}/projects/artisans-compass`}
             className="group block rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--border-hi)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
           >
             <div className="mb-3 flex items-center justify-between">
@@ -85,7 +85,7 @@ export default function HomeContent() {
           {recentPosts.map((post, i) => (
             <ScrollReveal key={post.slug} delay={i * 60}>
               <Link
-                href={`/blog/${post.slug}`}
+                href={`/${lang}/blog/${post.slug}`}
                 className="group flex items-baseline justify-between border-b border-[var(--border)] py-3.5"
               >
                 <span className="text-[14px] text-[var(--t2)] transition-colors group-hover:text-[var(--t1)]">
@@ -97,7 +97,7 @@ export default function HomeContent() {
           ))}
         </div>
         <ScrollReveal delay={140}>
-          <Link href="/blog" className="mt-4 inline-block text-[12px] text-[var(--t4)] transition-colors hover:text-[var(--accent)]">
+          <Link href={`/${lang}/blog`} className="mt-4 inline-block text-[12px] text-[var(--t4)] transition-colors hover:text-[var(--accent)]">
             {t.home.blogMore}
           </Link>
         </ScrollReveal>

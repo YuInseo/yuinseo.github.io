@@ -1,7 +1,5 @@
 'use client';
 import Link from "next/link";
-import Nav from "../components/Nav";
-import Footer from "../components/Footer";
 import { POSTS, CATEGORIES } from "./posts";
 import { useLang } from "../i18n/LangContext";
 import type { Post } from "./posts";
@@ -20,8 +18,6 @@ export default function BlogContent() {
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--t1)]">
-      <Nav />
-
       <section className="mx-auto max-w-2xl px-5 pb-20 pt-20">
         <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
           {t.blog.eyebrow}
@@ -42,7 +38,7 @@ export default function BlogContent() {
                   {posts.map((post) => (
                     <Link
                       key={post.slug}
-                      href={`/blog/${post.slug}`}
+                      href={`/${lang}/blog/${post.slug}`}
                       className="group flex items-baseline justify-between gap-4 rounded-lg px-4 py-3 transition-colors hover:bg-[var(--surface)]"
                     >
                       <span className="text-[14px] font-medium text-[var(--t2)] transition-colors group-hover:text-[var(--t1)]">
@@ -59,8 +55,6 @@ export default function BlogContent() {
           })}
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

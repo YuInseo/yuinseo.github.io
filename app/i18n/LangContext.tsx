@@ -1,20 +1,24 @@
 'use client';
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { translations, type Translations } from './translations';
 
 type Lang = 'ko' | 'en';
 interface Ctx { lang: Lang; setLang: (l: Lang) => void; t: Translations; }
 const LangContext = createContext<Ctx>({ lang: 'ko', setLang: () => {}, t: translations.ko });
 
-export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>('ko');
-  useEffect(() => {
-    const saved = localStorage.getItem('ytv_lang') as Lang;
-    if (saved === 'ko' || saved === 'en') { setLangState(saved); return; }
-    setLangState(navigator.language.startsWith('ko') ? 'ko' : 'en');
-  }, []);
-  const setLang = (l: Lang) => { setLangState(l); localStorage.setItem('ytv_lang', l); };
-  return <LangContext.Provider value={{ lang, setLang, t: translations[lang] }}>{children}</LangContext.Provider>;
+export function LangProvider({ lang, children }: { lang: Lang; children: ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const setLang = (next: Lang) => {
+    if (typeof window !== 'undefined') localStorage.setItem('ytv_lang', next);
+    router.push(pathname.replace(/^\/(ko|en)/, `/${next}`));
+  };
+  return (
+    <LangContext.Provider value={{ lang, setLang, t: translations[lang] }}>
+      {children}
+    </LangContext.Provider>
+  );
 }
 
 export const useLang = () => useContext(LangContext);

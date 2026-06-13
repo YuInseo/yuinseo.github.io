@@ -1,9 +1,7 @@
 'use client';
-import Nav from "../../components/Nav";
 import DownloadButton from "./DownloadButton";
 import DemoSection from "./DemoSection";
 import ScrollReveal from "../../components/ScrollReveal";
-import Footer from "../../components/Footer";
 import { useLang } from "../../i18n/LangContext";
 
 export default function ArtisansContent() {
@@ -11,8 +9,6 @@ export default function ArtisansContent() {
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--t1)]">
-      <Nav />
-
       <section className="mx-auto max-w-2xl px-5 pb-14 pt-20">
         <h1 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
           Artisan&apos;s Compass
@@ -83,8 +79,6 @@ export default function ArtisansContent() {
           ))}
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

@@ -12,15 +12,15 @@ export default function Nav() {
     >
       <nav className="mx-auto flex max-w-2xl items-center justify-between px-5 py-4">
         <Link
-          href="/"
+          href={`/${lang}`}
           className="font-semibold tracking-tight text-[var(--t1)] transition-colors hover:text-[var(--accent)]"
         >
           yuinseo
         </Link>
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-5 text-sm text-[var(--t4)]">
-            <Link href="/blog" className="transition-colors hover:text-[var(--t1)]">{t.nav.blog}</Link>
-            <Link href="/projects/artisans-compass" className="transition-colors hover:text-[var(--t1)]">{t.nav.projects}</Link>
+            <Link href={`/${lang}/blog`} className="transition-colors hover:text-[var(--t1)]">{t.nav.blog}</Link>
+            <Link href={`/${lang}/projects/artisans-compass`} className="transition-colors hover:text-[var(--t1)]">{t.nav.projects}</Link>
           </div>
           <div className="flex items-center gap-2 text-[12px] text-[var(--t4)]">
             <button
