@@ -1,9 +1,11 @@
 export type Post = {
   slug: string;
   title: string;
+  titleEn?: string;
   date: string;
   category: string;
   summary: string;
+  summaryEn?: string;
   body: { heading?: string; text: string }[];
 };
 
@@ -13,9 +15,11 @@ export const POSTS: Post[] = [
   {
     slug: "fouc-nextjs-dark-theme",
     title: "Next.js 정적 사이트에서 다크 테마 깜빡임 잡기",
+    titleEn: "Fixing Dark Theme Flash on a Next.js Static Site",
     date: "2026-06-01",
     category: "포트폴리오",
     summary: "포트폴리오 사이트에서 첫 로드 시 스타일이 깨지고 새로고침해야 정상이 되는 현상을 수정했다. JS 하이드레이션 전 CSS 기본값 문제였다.",
+    summaryEn: "Styles broke on first load and required a refresh to normalize. The root cause was CSS defaults applied before JS hydration.",
     body: [
       {
         text: "사이트를 처음 열면 Nav 링크가 파란색으로 보이고, 데모 앱의 모바일·데스크톱 레이아웃이 동시에 나타났다. 새로고침하면 정상으로 돌아왔다.",
@@ -37,9 +41,11 @@ export const POSTS: Post[] = [
   {
     slug: "react-context-theme-sync",
     title: "React Context로 사이트 테마를 데모 앱에 연동하기",
+    titleEn: "Syncing Site Theme to the Demo App via React Context",
     date: "2026-05-15",
     category: "포트폴리오",
     summary: "포트폴리오 사이트의 다크·라이트 테마 전환이 내부 데모 앱 색상에도 자동으로 반영되도록 구현했다. prop drilling 없이 Context 하나로 해결했다.",
+    summaryEn: "Made the site's dark/light theme switch automatically reflect in the embedded demo app. Solved without prop drilling using a single Context.",
     body: [
       {
         text: "데모 앱은 자체 색상 상수를 갖고 있었는데, 사이트 테마를 바꿔도 데모 앱은 항상 다크 색상으로 고정돼 있었다. 사이트 테마와 연동해야 했다.",
@@ -61,9 +67,11 @@ export const POSTS: Post[] = [
   {
     slug: "mobile-desktop-layout-separation",
     title: "모바일·데스크톱 레이아웃을 하나의 컴포넌트에서 분리하기",
+    titleEn: "Separating Mobile and Desktop Layouts in a Single Component",
     date: "2026-05-01",
     category: "포트폴리오",
     summary: "데모 앱 컴포넌트에서 모바일과 데스크톱 레이아웃이 뒤엉켜 있었다. Tailwind 반응형 클래스와 embedded prop 패턴으로 깔끔하게 분리했다.",
+    summaryEn: "Mobile and desktop layouts were tangled in one component. Cleanly separated using Tailwind responsive classes and an embedded prop pattern.",
     body: [
       {
         text: "데모 앱은 데스크톱에선 3패널 레이아웃, 모바일에선 하단 탭 바 형태로 보여야 했다. 처음엔 하나의 컴포넌트 안에서 조건부 렌더링으로 처리했는데, 코드가 복잡해져서 분리했다.",
@@ -85,9 +93,11 @@ export const POSTS: Post[] = [
   {
     slug: "css-keyframes-tab-slide",
     title: "CSS keyframes로 탭 전환 슬라이드 애니메이션 구현",
+    titleEn: "Tab Slide Transition Animation with CSS Keyframes",
     date: "2026-04-20",
     category: "포트폴리오",
     summary: "모바일 데모 앱에서 탭을 전환할 때 콘텐츠가 좌우로 슬라이드되며 교체되는 효과를 구현했다. JS 없이 CSS keyframes만으로 처리했다.",
+    summaryEn: "Added a directional slide effect when switching tabs in the mobile demo app. Handled entirely with CSS keyframes, no JS animation library needed.",
     body: [
       {
         text: "탭을 누를 때 콘텐츠가 뚝 바뀌는 느낌이 어색했다. 왼쪽 탭을 누르면 콘텐츠가 오른쪽에서 들어오고, 오른쪽 탭을 누르면 왼쪽에서 들어오는 방향성 있는 전환을 만들고 싶었다.",
@@ -109,9 +119,11 @@ export const POSTS: Post[] = [
   {
     slug: "mobile-calendar-swipe",
     title: "모바일 캘린더에 터치 스와이프로 주간 이동 구현",
+    titleEn: "Touch Swipe Navigation for the Mobile Calendar",
     date: "2026-04-10",
     category: "포트폴리오",
     summary: "모바일 데모 캘린더에서 좌우 스와이프로 날짜를 이동하는 제스처를 구현했다. onTouchStart / onTouchEnd로 간단하게 처리할 수 있었다.",
+    summaryEn: "Added left/right swipe gestures to navigate dates in the mobile demo calendar. Kept simple with onTouchStart and onTouchEnd.",
     body: [
       {
         text: "3일 단위로 날짜를 표시하는 캘린더에서 버튼으로만 날짜를 이동하면 모바일에서 부자연스러웠다. 터치 스와이프로도 이동할 수 있어야 했다.",
@@ -133,9 +145,11 @@ export const POSTS: Post[] = [
   {
     slug: "timetable-auto-tracking",
     title: "앱 전환 이력을 자동으로 감지하는 방법",
+    titleEn: "Auto-Detecting App Switch History",
     date: "2025-06-01",
     category: "Artisan's Compass",
     summary: "Windows에서 포그라운드 앱이 바뀔 때마다 이를 감지해 타임테이블에 기록하는 구조를 정리했다.",
+    summaryEn: "How to detect foreground app changes on Windows and record them in a timetable automatically.",
     body: [
       {
         text: "타임테이블 자동 기록 기능을 구현하려면 현재 포그라운드 앱이 무엇인지, 언제 바뀌었는지를 알아야 한다.",

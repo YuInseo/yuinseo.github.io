@@ -1,7 +1,10 @@
+'use client';
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
+import { useLang } from "../i18n/LangContext";
 
 export default function Nav() {
+  const { lang, setLang, t } = useLang();
   return (
     <header
       className="sticky top-0 z-50 border-b border-[var(--border-hi)] backdrop-blur-md"
@@ -16,8 +19,23 @@ export default function Nav() {
         </Link>
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-5 text-sm text-[var(--t4)]">
-            <Link href="/blog" className="transition-colors hover:text-[var(--t1)]">블로그</Link>
-            <Link href="/projects/artisans-compass" className="transition-colors hover:text-[var(--t1)]">프로젝트</Link>
+            <Link href="/blog" className="transition-colors hover:text-[var(--t1)]">{t.nav.blog}</Link>
+            <Link href="/projects/artisans-compass" className="transition-colors hover:text-[var(--t1)]">{t.nav.projects}</Link>
+          </div>
+          <div className="flex items-center gap-2 text-[12px] text-[var(--t4)]">
+            <button
+              onClick={() => setLang('ko')}
+              className={`transition-colors hover:text-[var(--t1)]${lang === 'ko' ? ' font-semibold text-[var(--t1)]' : ''}`}
+            >
+              KO
+            </button>
+            <span>/</span>
+            <button
+              onClick={() => setLang('en')}
+              className={`transition-colors hover:text-[var(--t1)]${lang === 'en' ? ' font-semibold text-[var(--t1)]' : ''}`}
+            >
+              EN
+            </button>
           </div>
           <ThemeToggle />
         </div>
