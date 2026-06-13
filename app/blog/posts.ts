@@ -171,9 +171,11 @@ export const POSTS: Post[] = [
   {
     slug: "scroll-reveal-intersection-observer",
     title: "IntersectionObserver로 스크롤 등장 애니메이션 구현",
+    titleEn: "Scroll Reveal Animation with IntersectionObserver",
     date: "2025-05-28",
     category: "포트폴리오",
     summary: "포트폴리오 사이트에 스크롤 시 요소가 올라오며 나타나는 효과를 추가했다. requestAnimationFrame 없이도 충분히 부드럽다.",
+    summaryEn: "Added scroll-in reveal effects to the portfolio site. Smooth enough without requestAnimationFrame.",
     body: [
       {
         text: "각 섹션이 뷰포트에 진입할 때 opacity + translateY 전환을 적용하고 싶었다. CSS transition만으로 처리하고 싶어서 JS는 상태 토글 역할만 하도록 구성했다.",
