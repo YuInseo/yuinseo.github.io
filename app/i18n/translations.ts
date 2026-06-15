@@ -65,6 +65,9 @@ export type Translations = {
     sectionOther: string;
     features: { label: string; desc: string }[];
   };
+  footer: {
+    views: (n: string) => string;
+  };
 };
 
 export const translations: Record<'ko' | 'en', Translations> = {
@@ -155,6 +158,9 @@ export const translations: Record<'ko' | 'en', Translations> = {
         { label: '설정', desc: '타임라인 그리드 간격, 야간 구간 마커, 하단 바 탭 구성 등 세부 조정 가능.' },
       ],
     },
+    footer: {
+      views: (n: string) => `조회수 ${n}회`,
+    },
   },
   en: {
     nav: {
@@ -242,6 +248,9 @@ export const translations: Record<'ko' | 'en', Translations> = {
         { label: 'Journal', desc: 'Launch the journal screen instantly with one tap in the mobile app. Supports emotion tags and photo attachments.' },
         { label: 'Settings', desc: 'Fine-tune timeline grid interval, night-time markers, bottom bar tab layout, and more.' },
       ],
+    },
+    footer: {
+      views: (n: string) => `${n} views`,
     },
   },
 };
