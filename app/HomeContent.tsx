@@ -77,7 +77,7 @@ export default function HomeContent() {
         </ScrollReveal>
       </section>
 
-      <section className="pb-32">
+      <section className="pb-14">
         <ScrollReveal>
           <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">{t.home.sectionBlog}</p>
         </ScrollReveal>
@@ -101,6 +101,28 @@ export default function HomeContent() {
             {t.home.blogMore}
           </Link>
         </ScrollReveal>
+      </section>
+
+      <section className="pb-32">
+        <ScrollReveal>
+          <p className="mb-5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--t4)]">{t.home.sectionContact}</p>
+        </ScrollReveal>
+        <div className="space-y-0">
+          <ScrollReveal>
+            <div className="flex items-baseline justify-between border-b border-[var(--border)] py-3.5">
+              <span className="text-[12px] text-[var(--t5)]">Name</span>
+              <span className="text-[14px] text-[var(--t2)]">{t.home.name}</span>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={60}>
+            <div className="flex items-baseline justify-between border-b border-[var(--border)] py-3.5">
+              <span className="text-[12px] text-[var(--t5)]">Email</span>
+              <a href={`mailto:${t.home.contactEmail}`} className="text-[14px] text-[var(--t2)] transition-colors hover:text-[var(--accent)]">
+                {t.home.contactEmail}
+              </a>
+            </div>
+          </ScrollReveal>
+        </div>
       </section>
 
     </main>

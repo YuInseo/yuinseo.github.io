@@ -20,6 +20,8 @@ export type Translations = {
     projectDesc: string;
     sectionBlog: string;
     blogMore: string;
+    sectionContact: string;
+    contactEmail: string;
   };
   blog: {
     eyebrow: string;
@@ -90,6 +92,8 @@ export const translations: Record<'ko' | 'en', Translations> = {
       projectDesc: '하루를 기록하는 생산성 앱. 앱 사용 이력이 타임테이블에 자동으로 쌓이고, 프로젝트·할일·포모도로가 한 흐름으로 연결되는 구조.',
       sectionBlog: '블로그',
       blogMore: '더 보기 →',
+      sectionContact: '연락처',
+      contactEmail: 'inseo0121@gmail.com',
     },
     blog: {
       eyebrow: 'today i learned',
@@ -178,6 +182,8 @@ export const translations: Record<'ko' | 'en', Translations> = {
       projectDesc: 'A productivity app for logging your day. App usage history builds up automatically in a timetable, with projects, todos, and pomodoro connected in one flow.',
       sectionBlog: 'Blog',
       blogMore: 'More →',
+      sectionContact: 'Contact',
+      contactEmail: 'inseo0121@gmail.com',
     },
     blog: {
       eyebrow: 'today i learned',
