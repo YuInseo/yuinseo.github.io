@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { differenceInSeconds, getHours } from 'date-fns';
-import { Session } from '../../../types';
+import { Session } from '@/types';
 
 export function useTimeTableStats(
     sessions: Session[],
@@ -23,29 +23,36 @@ export function useTimeTableStats(
 
             total += duration;
 
+            // Hourly Distribution logic
             let currentStr = s;
             while (currentStr < e) {
                 const currentHour = getHours(currentStr);
                 const nextHourDate = new Date(currentStr);
                 nextHourDate.setHours(currentHour + 1, 0, 0, 0);
+
                 const segmentEnd = nextHourDate < e ? nextHourDate : e;
                 const segmentDuration = differenceInSeconds(segmentEnd, currentStr);
+
                 hourlyDistribution[currentHour] += segmentDuration;
                 currentStr = segmentEnd;
             }
         });
 
+        // Find max hour
         let maxHour = -1;
         let maxDuration = 0;
         hourlyDistribution.forEach((dur, hour) => {
-            if (dur > maxDuration) { maxDuration = dur; maxHour = hour; }
+            if (dur > maxDuration) {
+                maxDuration = dur;
+                maxHour = hour;
+            }
         });
 
         let peakActivityHour = null;
         if (maxHour !== -1 && maxDuration > 0) {
             const ampm = maxHour >= 12 ? 'PM' : 'AM';
             const displayHour = maxHour % 12 || 12;
-            peakActivityHour = `${displayHour} ${ampm}`;
+            peakActivityHour = `${displayHour} ${ampm} `;
         }
 
         return { totalFocusTime: total, peakActivityHour };

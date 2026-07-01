@@ -1,7 +1,5 @@
-"use client";
-
 import { useState, useEffect } from 'react';
-import { Session, Project, PlannedSession, AppSettings } from '../../types';
+import { AppSettings, Session, Project, PlannedSession } from '@/types';
 import { useTimeTableData } from './hooks/useTimeTableData';
 import { useTimeTableStats } from './hooks/useTimeTableStats';
 import { TimeTableGrid } from './timetable/TimeTableGrid';
@@ -25,26 +23,61 @@ interface TimeTableGraphProps {
 }
 
 export function TimeTableGraph({
-    sessions, date, liveSession, projects = [], activeProjectId,
-    nightTimeStart = 24, settings, onUpdateSettings, renderMode = 'dynamic',
-    plannedSessions = [], currentTime, firstOpenedAt, appSessions
+    sessions,
+    date,
+    liveSession,
+    projects = [],
+    activeProjectId,
+    nightTimeStart = 24,
+    settings,
+    onUpdateSettings,
+    renderMode = 'dynamic',
+    plannedSessions = [],
+    currentTime,
+    firstOpenedAt,
+    appSessions
 }: TimeTableGraphProps): React.ReactNode {
     const [internalNow, setInternalNow] = useState(new Date());
     const now = currentTime || internalNow;
+
     const [isIgnoredAppsModalOpen, setIsIgnoredAppsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState<'ignored' | 'work'>('ignored');
     const [appsToConfigure, setAppsToConfigure] = useState<{ name: string; duration: number }[]>([]);
 
     useEffect(() => {
-        if (currentTime) return;
-        const interval = setInterval(() => setInternalNow(new Date()), 1000);
-        return () => clearInterval(interval);
-    }, [currentTime]);
+        if (!liveSession && currentTime) return;
+        if (!currentTime && liveSession) {
+            const interval = setInterval(() => {
+                setInternalNow(new Date());
+            }, 1000);
+            setInternalNow(new Date());
+            return () => clearInterval(interval);
+        }
+    }, [liveSession, currentTime]);
 
     const { sessionBlocks, TOTAL_MINUTES, TOTAL_HOURS } = useTimeTableData(
         sessions, date, liveSession, projects, now, renderMode, plannedSessions, nightTimeStart, settings, activeProjectId
     );
-    const { totalFocusTime, peakActivityHour } = useTimeTableStats(sessions, liveSession, now);
+
+    const { totalFocusTime, peakActivityHour } = useTimeTableStats(
+        sessions, liveSession, now
+    );
+
+    const toggleAppIgnored = (appName: string, currentIgnored: boolean) => {
+        if (!settings || !onUpdateSettings) return;
+        const newIgnoredApps = currentIgnored
+            ? settings.ignoredApps?.filter(app => app !== appName) || []
+            : [...(settings.ignoredApps || []), appName];
+        onUpdateSettings({ ...settings, ignoredApps: newIgnoredApps });
+    };
+
+    const toggleWorkApp = (appName: string, isCurrentlyWork: boolean) => {
+        if (!settings || !onUpdateSettings) return;
+        const newWorkApps = isCurrentlyWork
+            ? settings.workApps?.filter(app => app !== appName) || []
+            : [...(settings.workApps || []), appName];
+        onUpdateSettings({ ...settings, workApps: newWorkApps });
+    };
 
     const toggleWorkFilter = (checked: boolean) => {
         if (!settings || !onUpdateSettings) return;
@@ -56,8 +89,15 @@ export function TimeTableGraph({
             const apps = Object.entries(block.appDistribution || {})
                 .sort(([, a], [, b]) => (b as number) - (a as number))
                 .map(([name, duration]) => ({ name, duration: duration as number }));
-            setAppsToConfigure(apps.length === 0 ? [{ name: block.title, duration: block.durationMins * 60 }] : apps);
-        } else { setAppsToConfigure([]); }
+
+            if (apps.length === 0) {
+                setAppsToConfigure([{ name: block.title, duration: block.durationMins * 60 }]);
+            } else {
+                setAppsToConfigure(apps);
+            }
+        } else {
+            setAppsToConfigure([]);
+        }
         setModalMode(mode);
         setIsIgnoredAppsModalOpen(true);
     };
@@ -90,14 +130,15 @@ export function TimeTableGraph({
                     peakActivityHour={peakActivityHour}
                 />
             </div>
+
             <TimeTableSettingsModal
                 isIgnoredAppsModalOpen={isIgnoredAppsModalOpen}
                 setIsIgnoredAppsModalOpen={setIsIgnoredAppsModalOpen}
                 modalMode={modalMode}
                 appsToConfigure={appsToConfigure}
                 settings={settings}
-                toggleAppIgnored={() => {}}
-                toggleWorkApp={() => {}}
+                toggleAppIgnored={toggleAppIgnored}
+                toggleWorkApp={toggleWorkApp}
             />
         </div>
     );

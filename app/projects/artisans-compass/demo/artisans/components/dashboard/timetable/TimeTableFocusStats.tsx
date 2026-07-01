@@ -1,6 +1,10 @@
-import { useTranslation } from "../../../i18n";
+import { useTranslation } from "react-i18next";
 
-export function TimeTableFocusStats({ liveSession, totalFocusTime, peakActivityHour }: any) {
+export function TimeTableFocusStats({
+    liveSession,
+    totalFocusTime,
+    peakActivityHour
+}: any) {
     const { t } = useTranslation();
 
     return (
@@ -18,6 +22,7 @@ export function TimeTableFocusStats({ liveSession, totalFocusTime, peakActivityH
                     ) : (
                         <div className="h-[19px] mb-1 w-full" aria-hidden="true" />
                     )}
+
                     <div className="flex items-center gap-8 w-full">
                         <div>
                             <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold mb-1 opacity-70">{t('calendar.totalFocus')}</div>
@@ -27,6 +32,7 @@ export function TimeTableFocusStats({ liveSession, totalFocusTime, peakActivityH
                                 {totalFocusTime % 60}<span className="text-xs font-sans font-medium text-muted-foreground">s</span>
                             </div>
                         </div>
+
                         {peakActivityHour !== null && (
                             <div>
                                 <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold mb-1 opacity-70">{t('calendar.peakFocus')}</div>
