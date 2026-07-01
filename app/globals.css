@@ -9,6 +9,8 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Dark (default — applied before JS hydration) ── */
 :root, .dark {
+  /* shadcn-style radius token (used by tailwind borderRadius scale) */
+  --radius: 0.5rem;
   --bg:         #111111;
   --surface:    #1c1916;
   --surface-up: #252220;
