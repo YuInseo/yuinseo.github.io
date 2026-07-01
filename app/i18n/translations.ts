@@ -2,14 +2,21 @@ export type Translations = {
   nav: {
     blog: string;
     projects: string;
+    resume: string;
   };
   home: {
     tagline: string;
-    name: string;
-    intro: string;
+    heroTitle1: string;
+    heroTitle2: string;
+    heroSub: string;
+    ctaGithub: string;
+    ctaResume: string;
+    sectionStack: string;
+    stackLead: string;
     sectionCerts: string;
     certVisualDesign: string;
     certVisualDesignDetail: string;
+    certVisualDesignBridge: string;
     certToeic: string;
     certToeicDetail: string;
     certTechnical: string;
@@ -17,9 +24,15 @@ export type Translations = {
     certsMore: string;
     sectionProjects: string;
     projectBadge: string;
-    projectDesc: string;
+    projectSummary: string;
+    projectHighlights: string[];
+    projectCta: string;
     sectionBlog: string;
+    blogLead: string;
     blogMore: string;
+    contactTitle: string;
+    contactSub: string;
+    ctaEmail: string;
   };
   blog: {
     eyebrow: string;
@@ -72,24 +85,41 @@ export const translations: Record<'ko' | 'en', Translations> = {
     nav: {
       blog: '블로그',
       projects: '프로젝트',
+      resume: '이력서',
     },
     home: {
-      tagline: 'indie developer',
-      name: '유인서',
-      intro: '생활의 불편함을 줄여주는 앱을 만들고 있습니다.',
+      tagline: 'frontend developer',
+      heroTitle1: '사용자 경험을 개선하는',
+      heroTitle2: '프론트엔드 개발자, 유인서입니다.',
+      heroSub: 'React와 TypeScript로 웹을, Electron으로 데스크톱 앱을 만듭니다. "쓰다 보면 불편한 순간"을 찾아내 직접 제품으로 해결해 왔습니다. 기획부터 디자인, 개발, 배포까지 혼자 완주해 본 경험이 팀에서 빠르게 맥락을 잡는 힘이 된다고 믿습니다.',
+      ctaGithub: 'GitHub 보러가기',
+      ctaResume: '이력서 열기',
+      sectionStack: 'Tech Stack',
+      stackLead: '실무에서 바로 쓰는 도구들입니다. 단순 나열이 아니라, 아래 프로젝트에서 실제로 사용한 기술만 담았습니다.',
       sectionCerts: '학력 & 자격증',
       certVisualDesign: '시각디자인학과',
       certVisualDesignDetail: '학점은행제 · 2025.06 수료',
+      certVisualDesignBridge: 'UI 디자인을 직접 할 수 있는 프론트엔드 개발자의 기반',
       certToeic: 'TOEIC',
       certToeicDetail: '800점',
       certTechnical: '정보처리기사 · ITQ · GTQ 1급',
       certTechnicalDetail: '국가공인',
       certsMore: '자세히 보기 →',
       sectionProjects: '프로젝트',
-      projectBadge: 'Windows 앱',
-      projectDesc: '하루를 기록하는 생산성 앱. 앱 사용 이력이 타임테이블에 자동으로 쌓이고, 프로젝트·할일·포모도로가 한 흐름으로 연결되는 구조.',
+      projectBadge: 'Electron · Windows 앱 · 1인 개발',
+      projectSummary: '앱 사용 이력을 자동 수집해 타임테이블로 시각화하는 생산성 데스크톱 앱. 기획 → 디자인 → 개발 → 배포 전 과정을 혼자 담당했습니다.',
+      projectHighlights: [
+        'Electron + React + TypeScript로 Windows 네이티브 수준의 앱 구현',
+        '초 단위로 쌓이는 앱 사용 로그를 렌더링 병목 없이 타임테이블 그리드에 실시간 반영하는 데이터 집계 구조 설계',
+        '실제 앱 UI를 웹에 인터랙티브 데모로 이식 — 설치 없이 브라우저에서 직접 체험 가능',
+      ],
+      projectCta: '라이브 데모 체험 →',
       sectionBlog: '블로그',
+      blogLead: '문제를 만나면 기록합니다. 최근에 배운 것들:',
       blogMore: '더 보기 →',
+      contactTitle: '함께 일할 프론트엔드 개발자를 찾고 계신가요?',
+      contactSub: '이력서와 코드로 더 자세히 보여드릴 수 있습니다.',
+      ctaEmail: '이메일 보내기',
     },
     blog: {
       eyebrow: 'today i learned',
@@ -160,24 +190,41 @@ export const translations: Record<'ko' | 'en', Translations> = {
     nav: {
       blog: 'Blog',
       projects: 'Projects',
+      resume: 'Resume',
     },
     home: {
-      tagline: 'indie developer',
-      name: 'Yuinseo',
-      intro: 'Building apps that reduce everyday friction.',
+      tagline: 'frontend developer',
+      heroTitle1: "I'm Yuinseo, a frontend developer",
+      heroTitle2: 'focused on user experience.',
+      heroSub: 'I build for the web with React and TypeScript, and for the desktop with Electron. I find the moments where software gets in the way and turn them into products. Having taken projects from planning through design, development, and release on my own, I pick up context fast on a team.',
+      ctaGithub: 'View GitHub',
+      ctaResume: 'Open Resume',
+      sectionStack: 'Tech Stack',
+      stackLead: 'Tools I use in real work — not a wish list. Everything here was actually used in the project below.',
       sectionCerts: 'Education & Certifications',
       certVisualDesign: 'Visual Design',
       certVisualDesignDetail: 'Credit Bank System · Completed 2025.06',
+      certVisualDesignBridge: 'The foundation of a frontend developer who can design UI firsthand',
       certToeic: 'TOEIC',
       certToeicDetail: '800',
       certTechnical: 'Engineer Info Processing · ITQ · GTQ Lv.1',
       certTechnicalDetail: 'National Certified',
       certsMore: 'View all →',
       sectionProjects: 'Projects',
-      projectBadge: 'Windows App',
-      projectDesc: 'A productivity app for logging your day. App usage history builds up automatically in a timetable, with projects, todos, and pomodoro connected in one flow.',
+      projectBadge: 'Electron · Windows App · Solo Project',
+      projectSummary: 'A productivity desktop app that automatically collects app usage history and visualizes it as a timetable. I owned the entire process: planning → design → development → release.',
+      projectHighlights: [
+        'Built a Windows desktop app at near-native quality with Electron + React + TypeScript',
+        'Designed a data aggregation layer that streams second-by-second usage logs into a timetable grid in real time without rendering bottlenecks',
+        'Ported the actual app UI to the web as an interactive demo — try the core features in the browser, no install needed',
+      ],
+      projectCta: 'Try the live demo →',
       sectionBlog: 'Blog',
+      blogLead: 'When I hit a problem, I write it down. Recently learned:',
       blogMore: 'More →',
+      contactTitle: 'Looking for a frontend developer to work with?',
+      contactSub: 'I can show you more through my resume and code.',
+      ctaEmail: 'Send Email',
     },
     blog: {
       eyebrow: 'today i learned',
