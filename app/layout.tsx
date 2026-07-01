@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     default: "yuinseo",
     template: "%s | yuinseo",
   },
-  description: "생활의 불편함을 줄여주는 앱을 만드는 indie developer.",
+  description: "사용자 경험을 개선하는 프론트엔드 개발자 유인서의 포트폴리오. React · TypeScript · Next.js · Electron.",
   openGraph: {
     siteName: "yuinseo",
     locale: "ko_KR",

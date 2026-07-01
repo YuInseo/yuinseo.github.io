@@ -7,8 +7,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { lang: string } }) {
   return {
     description: params.lang === 'en'
-      ? 'An indie developer building apps that reduce everyday inconveniences.'
-      : '생활의 불편함을 줄여주는 앱을 만드는 indie developer.',
+      ? 'Portfolio of Yuinseo, a frontend developer focused on user experience. React · TypeScript · Next.js · Electron.'
+      : '사용자 경험을 개선하는 프론트엔드 개발자 유인서의 포트폴리오. React · TypeScript · Next.js · Electron.',
   };
 }
 
